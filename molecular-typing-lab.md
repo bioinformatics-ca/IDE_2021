@@ -156,10 +156,23 @@ ggtree(mlst_tree, layout = "radial") %<+% metadata +
   geom_tiplab(size = 2.0) 
   
 ```
-Now our tree is much aesthetically pleasing, but more crucially, easier to read.
+
+Now our tree is much more aesthetically pleasing, but more crucially, easier to
+read.
 
 Is this tree _useful_, though? Can we learn much about the population structure
-from it?
+from it? How does our chosen typing method affect the tree?
+
+#### Exercise 1 Bonus Work
+
+Try manipulating some of the parameters to `ggtree()` or `geom_tiplab()` to
+produce different visual results. You can view the documentation for these or
+any other functions either by clicking on it and pressing `F1` on your keyboard,
+or by typing it into the console with a leading `?`, e.g. `?ggtree`. In the docs
+for `ggtree()`, there are some alternative tree layouts you can try.
+
+If you have previous experience with `ggplot2`, many of the same concepts apply,
+including the `aes()` function.
 
 #### Load raw cgMLST Data
 
