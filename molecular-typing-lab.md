@@ -174,8 +174,114 @@ for `ggtree()`, there are some alternative tree layouts you can try.
 If you have previous experience with `ggplot2`, many of the same concepts apply,
 including the `aes()` function.
 
-#### Load raw cgMLST Data
+### Exercise 2
 
-#### Data Cleaning
+Your bioinformatician has also provided you with calls core genome multilocus
+sequence typing scheme (cgMLST). It is structurally similar to classic MLST,
+however, it uses a much larger number of loci. By having a larger number or
+loci, more subtle differences between similar strains can be resolved.
+
+Before we continue, we should remember that computers are supposed to make our
+lives easier and not harder, and with a programming language like R, we can make
+the computer do as we want. Let's write a small function that will let us easily
+reuse the work we did for MLST, but on any similar data.
+
+```R
+calculate_tree <- function(calls, pairwise.deletion) {
+
+  tree <-
+    calls %>%
+    column_to_rownames("genome") %>%
+    dist.gene(method = "pairwise", pairwise.deletion = pairwise.deletion) %>%
+    hclust() %>%
+    as.phylo()
+
+  tree
+}
+```
+
+You can use your new function, `calculate_tree()` to quickly generate and draw a
+tree for our cgMLST calls.
+
+```R
+raw_cgmlst_calls <- read_csv("cgmlst.csv", na="0")
+
+raw_cgmlst_tree <- calculate_tree(raw_cgmlst_calls, pairwise.deletion = FALSE)
+
+ggtree(raw_cgmlst_tree, layout = "radial")
+```
+
+This tree derived from cgMLST allele calls does not look particularly different
+from the 7-gene MLST tree we drew earlier. What could be affecting this?
+
+One problem that can affect any typing method — but MLST-like methods are
+particularly sensitive to — is missing data. A locus can be absent because of
+sequencing error or because that genomic region is not as conserved as was
+believed. MLST-like methods assume that all loci are always present. In practice
+due to the size of cgMLST schemes, some tolerance to missing data is required.
+
+Generally, it is preferable to discard poor-quality genomes before removing loci
+from the scheme. Here, we have encoded missing data as `0` in `cgmlst.csv`, and
+told R to treat `0` as absent — `NA`.
+
+Let's count the number of missing loci per genome.
+
+```R
+missing_per_genome <-
+  raw_cgmlst_calls %>%
+  rowwise(genome) %>%
+  summarize(n_bad = sum(is.na(
+    c_across(everything())
+    ))
+  ) %>%
+  arrange(desc(n_bad))
+```
+
+Having calculated the number of missing calls per genome, we can preview the
+sorted table, look at the summary statistics, and draw a histogram.
+
+```R
+missing_per_genome
+
+summary(missing_per_genome$n_bad)
+
+qplot(data=missing_per_genome, x=n_bad, geom="histogram", binwidth=1)
+```
+
+```
+> missing_per_genome
+# A tibble: 191 × 2
+# Groups:   genome [191]
+   genome  n_bad
+   <chr>   <int>
+ 1 CI-5815   242
+ 2 CI-5603   234
+ 3 CI-5507   228
+ 4 CI-5626   227
+ 5 CI-4990   227
+ 6 CI-4542    13
+ 7 CI-4506    12
+ 8 CI-6226    12
+ 9 CI-4840    11
+10 CI-4995    11
+# … with 181 more rows
+
+> summary(missing_per_genome$n_bad)
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+   1.00    5.00    6.00   11.99    8.00  242.00 
+```
+![Missing Loci per Genome](images/missing_per_genome.png)
+
+We can can see a normal-ish distribution of missing data around 10 loci per
+genome, but there are a handful of troublemakers missing almost half of their
+typing loci. Let's get ready to remove them for the greater good of our typing
+system.
+
+```R
+genomes_to_discard <-
+  missing_per_genome %>%
+  filter(n_bad > 200) %>%
+  pull(genome)
+```
 
 
