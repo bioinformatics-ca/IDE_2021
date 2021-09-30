@@ -274,8 +274,8 @@ qplot(data=missing_per_genome, x=n_bad, geom="histogram", binwidth=1)
 
 We can can see a normal-ish distribution of missing data around 10 loci per
 genome, but there are a handful of troublemakers missing almost half of their
-typing loci. Let's get ready to remove them for the greater good of our typing
-system.
+typing loci. Let's remember which ones they are so we can later remove them for
+the greater good of our typing system.
 
 ```R
 genomes_to_discard <-
@@ -284,4 +284,83 @@ genomes_to_discard <-
   pull(genome)
 ```
 
+We can also look to see if there are any misbehaving loci.
+
+```R
+missing_per_locus <-
+  raw_cgmlst_calls %>%
+  summarise(across(-genome, ~ sum(is.na(.)))) %>%
+  pivot_longer(names_to = "locus",
+               values_to = "n_bad",
+               cols = everything()) %>%
+  arrange(desc(n_bad))
+```
+
+We can summarize in a similar manner to the genomes:
+
+```R
+missing_per_locus
+
+summary(missing_per_locus$n_bad)
+
+qplot(data = missing_per_locus, x = n_bad, geom = "histogram", binwidth=1)
+```
+```
+> missing_per_locus
+# A tibble: 594 × 2
+   locus       n_bad
+   <chr>       <int>
+ 1 tktA           50
+ 2 purD           11
+ 3 group_12331    10
+ 4 rpmA           10
+ 5 korB            9
+ 6 ribA            9
+ 7 tmk             9
+ 8 ndhC            9
+ 9 dnaK            8
+10 exoA            8
+# … with 584 more rows
+
+> summary(missing_per_locus$n_bad)
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  0.000   3.000   4.000   3.857   5.000  50.000 
+```
+
+![Missing Calls per Locus](images/missing_per_locus.png)
+
+It looks like `tktA` is particularly troublesome in this population, and so we
+decide to remove it from the analysis.
+
+We can remove both genomes and locus in a single motion:
+
+```R
+filtered_cgmlst_calls <- 
+  raw_cgmlst_calls %>%
+  filter(!genome %in% genomes_to_discard) %>%
+  select(-tktA)
+```
+
+When we calculate the tree, we can also tell `ape::dist.gene` to, on a pairwise
+basis, not compare any two genomes at loci they don't share. This can be done by
+setting `pairwise.deletion=TRUE`. If pairwise deletion is `FALSE`, then any
+locus missing _any_ calls is dropped from the analysis. This can be an
+acceptable compromise to make sure the remaining scattered missing loci do not
+compromise the analysis.
+
+```R
+filtered_cgmlst_tree <- calculate_tree(filtered_cgmlst_calls,
+                                       pairwise.deletion = TRUE)
+
+ggtree(filtered_cgmlst_tree, layout="radial")
+```
+
+We can see greater discrimination between similar strains now that we have
+cleaned our data. What would the relative merits have been to not removing
+missing loci on a pairwise basis?
+
+#### Exercise 2 Bonus
+
+There is another locus which we may want to discard, albeit not because of
+missing data. It has another problem. What is it?
 
