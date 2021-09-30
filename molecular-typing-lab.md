@@ -57,7 +57,7 @@ program, however it has been modified to make it more amenable for teaching.
 Please feel free to ask me what modifications I've applied.  
 
 
-![](https://upload.wikimedia.org/wikipedia/commons/thumb/e/ed/Raccoon_%28Procyon_lotor%29_2.jpg/711px-Raccoon_%28Procyon_lotor%29_2.jpg)
+![Trash panda](https://upload.wikimedia.org/wikipedia/commons/thumb/e/ed/Raccoon_%28Procyon_lotor%29_2.jpg/711px-Raccoon_%28Procyon_lotor%29_2.jpg)
 
 ### Exercise 0 - Setting Up
 
@@ -109,11 +109,58 @@ tabular data.
 
 ### Exercise 1
 
+We'll first try to tackle our raccoon population _C. jejuni_ surveillance data
+using classic 7-gene MLST.
 
-#### Load and Display MLST
+We will read a CSV file containing MLST allele calls, calculate pairwise
+distances between these, cluster the distances, and generate a phylogenetic
+tree.
 
-```r
+```R
+mlst_calls <- read_csv("mlst.csv", na="0")
+
+mlst_calls  # run the variable name by itself to inspect the data
+
+# the %>% operator passes the lefthand value to the righthand function, i.e.,
+# x %>% f() %>% g() 
+# is equivalent to
+# g(f(x))
+
+mlst_distances <- 
+  mlst_calls %>% 
+  column_to_rownames("genome") %>% 
+  dist.gene(method = "pairwise", pairwise.deletion = FALSE)
+
+mlst_clusters <- hclust(mlst_distances)
+
+mlst_tree <- as.phylo(mlst_clusters)
 ```
+
+Now that we have calculated a tree, we can plot it.
+
+```R
+plot(mlst_tree)
+```
+
+Unfortunately, this tree is ugly and hard to read. We can draw much nicer trees
+using `ggtree`. We'll also read in a metadata file which contains auxiliary
+information about our isolates.
+
+```R
+metadata <- read_csv("metadata.csv")
+
+# We can use %<+% to attach a metadata file to a tree, and the + operator to add
+# new layers to our plot
+
+ggtree(mlst_tree, layout = "radial") %<+% metadata + 
+  geom_tiplab(size = 2.0) 
+  
+```
+Now our tree is much aesthetically pleasing, but more crucially, easier to read.
+
+Is this tree _useful_, though? Can we learn much about the population structure
+from it?
+
 #### Load raw cgMLST Data
 
 #### Data Cleaning
