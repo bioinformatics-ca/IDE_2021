@@ -101,6 +101,12 @@ library(ggplot2)
 print("Hello, world!")
 ```
 
+These libraries allow you to use pre-made code so you don't need to solve every
+problem from scratch. For example, the `ape` library provides us with
+`dist.gene`, a function that calculates pairwise allelic distances. Similarly,
+`dplyr` gives us `select` and `filter` and many other functions for manipulating
+tabular data.
+
 ### Exercise 1
 
 
