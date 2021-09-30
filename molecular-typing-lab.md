@@ -3,7 +3,7 @@ layout: tutorial_page
 permalink: /IDE_2021_molecular_typing_lab
 title: Molecular Typing Lab 
 header1: Workshop Pages for Students
-header2: Genome-scale Multilocus Sequence Typing Lab
+header2: Molecular Typing Lab
 image: /site_images/CBW_wshop-epidem_map-icon.png
 home: https://bioinformaticsdotca.github.io/IDE_2021
 description: Molecular Typing CBW Tutorial 
