@@ -64,7 +64,7 @@ Please feel free to ask me what modifications I've applied.
 First, let's copy data into your workspace:
 
 ```bash
-cp ~/CourseData/IDE_data/module3/* ~/workspace
+cp -r ~/CourseData/IDE_data/module3/* ~/workspace
 ```
 
 For this tutorial, we'll be using R interactively through RStudio, an integrated
