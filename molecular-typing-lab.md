@@ -366,3 +366,92 @@ missing data. It has another problem. What is it?
 
 ### Exercise 3
 
+To identify an outbreak within our surveillance data, we need to view the tree
+in the context of the metadata. We have two variables to look at: the animal
+from which the isolate was taken and the month when the animal was captured.
+
+We can first save our basic tree visualization, and add metadata annotation to
+it later.
+
+```R
+base_cgmlst_tree <- ggtree(filtered_cgmlst_tree, layout = "circular") 
+```
+
+First we will annotate the tree with information on the host animal.
+
+```R
+animal_tree <- 
+  base_cgmlst_tree %<+%
+  metadata +
+  geom_tippoint(aes(colour = animal)) +
+  labs(title = "animal")
+
+animal_tree
+```
+
+When can draw a separate tree with the month of capture.
+
+```R
+time_tree <-
+  base_cgmlst_tree %<+%
+  metadata +
+  geom_tippoint(aes(colour = date)) +
+  labs(title = "Capture Time")
+  
+time_tree
+```
+
+We can also draw the two trees side-by-side to aid comparison.
+
+```R
+plot_list(animal_tree, time_tree,  ncol=2)
+```
+
+Can you spot the outbreak?
+
+We can narrow the search by highlighting closely-related clusters with several
+members.
+
+```R
+clusters <-
+  filtered_cgmlst_tree %>% 
+  as.hclust() %>% 
+  cutree(h=10) %>% 
+  as_tibble(rownames = "genome") %>% 
+  rename(cluster = value)
+
+bigger_clusters <-
+  clusters %>% 
+  group_by(cluster) %>% 
+  summarize(n = length(genome)) %>% 
+  filter(n >= 6) %>% 
+  left_join(clusters) %>% 
+  select(genome, cluster)
+
+cluster_mrca_nodes <-
+  bigger_clusters %>% 
+  group_by(cluster) %>% 
+  summarize(cluster_mrca = getMRCA(filtered_cgmlst_tree, genome)) %>% 
+  mutate(cluster = factor(cluster))
+
+cluster_labelled_tree <-  base_cgmlst_tree + 
+  geom_highlight(data=cluster_mrca_nodes, 
+                 mapping=aes(node = cluster_mrca,
+                             fill = cluster)) +
+  geom_cladelab(data=cluster_mrca_nodes,
+                mapping=aes(node = cluster_mrca, 
+                            label=cluster),
+                size=10,
+                barsize=0,
+                offset=5)
+
+cluster_labelled_tree
+```
+
+#### Exercise 3 Bonus
+
+Look up the documentation for `gheatmap()` and see if you can use it as an
+alternative method for drawing metadata on trees. Although the name implies
+continuous variables, it can also show discrete variables such as the animal or
+cluster data.
+
