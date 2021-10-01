@@ -217,7 +217,8 @@ We will now spend some time to take a look at the phylogenetic tree we have cons
 alignbuddy alignment.fasta -er "0:100" > alignment.100.fasta
 
 # Time: 10 seconds
-QT_QPA_PLATFORM="offscreen" ete3 view -m r -t tree.subs.nwk -i tree.pdf --alg alignment.100.fasta --alg_type fullseq --alg_format fasta
+export QT_QPA_PLATFORM="offscreen"
+ete3 view -m r -t tree.subs.nwk -i tree.png --alg alignment.100.fasta --alg_type fullseq --alg_format fasta
 ```
 
 As output you should expect to see:
@@ -228,7 +229,6 @@ As output you should expect to see:
 "=="?
 /usr/local/conda/envs/augur/lib/python3.8/site-packages/ete3-3.1.2-py3.7.egg/ete3/evol/parser/codemlparser.py:221: SyntaxWarning: "is" with a literal. Did you mean
 "=="?
-Warnning: [1] terminal nodes could not be found in the alignment.
 ```
 
 *Note: `alignbuddy` produces no output and the warnings produced by `ete3` can be ignored.*
@@ -236,14 +236,14 @@ Warnning: [1] terminal nodes could not be found in the alignment.
 What these commands do is:
 
 1. `alignbuddy alignment.fasta -er "0:100" > alignment.100.fasta`: This extracts the first 100 bp from our multiple sequence alignment and saves to a file **alignment.100.fasta**.
-2. `ete3 view ...`: This draw the phylogenetic tree (`-t tree.subs.nwk`) alongside the alignment (`--alg alignment.100.fasta`) and saves to a a PDF file (`-i tree.pdf`).
-    * `QT_QPA_PLATFORM="offscreen"`: This needs to come before `ete3`. This is needed since the machines on AWS don't have a graphical window system (X Server) attached so we need to tell `ete3` that this is expected (e.g., display is "offscreen").
+2. `export QT_QPA_PLATFORM="offscreen"`: This needs to be set before running `ete3`. This is needed since the machines on AWS don't have a graphical window system (X Server) attached so we need to tell `ete3` that this is expected (e.g., display is `"offscreen"`).
+3. `ete3 view ...`: This draw the phylogenetic tree (`-t tree.subs.nwk`) alongside the alignment (`--alg alignment.100.fasta`) and saves to a a PNG file (`-i tree.png`). *Note: You can save to a PDF file instead by using `-i tree.pdf`.*
 
-Once we have the PDF file saved, you should be able to go to <http://YOUR-MACHINE/module4/analysis/tree.pdf> and view the tree alongside the first 100 bp of the alignment. This will be a pretty big drawing but should look something like:
+Once we have the PNG file saved, you should be able to go to <http://YOUR-MACHINE/module4/tree.png> and view the tree alongside the first 100 bp of the alignment. This will be a pretty big drawing but should look something like:
 
 ![tree-alignment.png][]
 
-On the right you can see the first 100 bp of the alignment (note that many of the beginning bp are gaps `-` or ambiguous bases `N` due to issues with sequencing). On the left you can see the phylogenetic tree. We will discuss a bit more in class on how to interpret phylogenetic trees.
+On the right you can see the first 100 bp of the alignment (note that many of the beginning bp are gaps `-` or ambiguous bases `N` due to issues with sequencing). On the left you can see the phylogenetic tree. The genome [MN908947](https://www.ncbi.nlm.nih.gov/nuccore/MN908947.3) is the reference genome which is used as a common coordinate system for naming mutations for SARS-CoV-2. We will discuss a bit more in class on how to interpret phylogenetic trees.
 
 ---
 
