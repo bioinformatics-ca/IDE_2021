@@ -185,8 +185,8 @@ The next step is to take the set of aligned genomes `alignment.fasta` and build 
 
 **Commands**
 ```bash
-# Time: 2 minutes
-augur tree --nthreads 4 --alignment alignment.fasta -o tree.subs.nwk --tree-builder-args='-alrt 1000'
+# Time: 40 seconds
+augur tree --nthreads 4 --alignment alignment.fasta -o tree.subs.nwk
 ```
 
 You should expect to see the following as output:
@@ -194,13 +194,13 @@ You should expect to see the following as output:
 **Output**
 ```
 Building a tree via:
-        iqtree2 -ninit 2 -n 2 -me 0.05 -nt 4 -s alignment-delim.fasta -m GTR -alrt 1000 > alignment-delim.iqtree.log
+        iqtree2 -ninit 2 -n 2 -me 0.05 -nt 4 -s alignment-delim.fasta -m GTR  > alignment-delim.iqtree.log
         Nguyen et al: IQ-TREE: A fast and effective stochastic algorithm for estimating maximum likelihood phylogenies.
         Mol. Biol. Evol., 32:268-274. https://doi.org/10.1093/molbev/msu300
 
 [...]
 
-Building original tree took 133.66861605644226 seconds
+Building original tree took 39.57634449005127 seconds
 ```
 
 This produces as output a `tree.subs.nwk` file, which is the actual phylogenetic tree (in Newick format). You can load this file in a variety of phylogenetic tree viewers (such as <http://phylo.io/>) but we will further refine this file to work with Auspice.
@@ -220,7 +220,7 @@ alignbuddy alignment.fasta -er "0:100" > alignment.100.fasta
 
 # Time: 10 seconds
 export QT_QPA_PLATFORM="offscreen"
-ete3 view -m r -t tree.subs.nwk -i tree.png --ss --alg alignment.100.fasta --alg_type fullseq --alg_format fasta
+ete3 view -m r -t tree.subs.nwk -i tree.png --alg alignment.100.fasta --alg_type fullseq --alg_format fasta
 ```
 
 As output you should expect to see:
