@@ -36,6 +36,8 @@ The sequenced genomes from this study are available as part of the [COG-UK Conso
 * [Augur][]
 * [mafft][]
 * [iqtree][]
+* [BuddySuite][]
+* [ETEToolkit][]
 * [treetime][]
 * [Auspice][]
 
@@ -83,7 +85,7 @@ You should see the command-prompt (where you type commands) switch to include `(
 augur 13.0.0
 ```
 
-<a name="ex1"></a>
+<a name="build-tree"></a>
 # 4. Building the phylogenetic tree
 
 The overall goal of this lab is to make use of a set of SARS-CoV-2 genomes sequenced and analyzed by the paper to construct our own phylogenetic tree and visualize our epidemiological metadata on top of this tree to gain insight into the early spread of COVID-19 within Scotland. To do this, we will make use of the [Augur][] tool suite, which powers the [NextStrain](https://nextstrain.org/) website.
@@ -320,6 +322,7 @@ The file `analysis-package.json` contains both the tree as well as the different
 
 ---
 
+<a name="visualize-tree"></a>
 # 5. Visualizing the phylogenetic tree alongside epidemiological metadata
 
 Now that we've constructed and packaged up a tree (`analysis-package.json`), we can visualize this data alongside our metadata (`filtered.tsv`) using [Auspice][].
@@ -356,7 +359,35 @@ Now you can spend some time to explore the data and get used to the Auspice inte
 
 ## Step 3: Examine particular clades
 
+We are now going to compare the tree we constructed from the tree in [Figure 4](https://www.nature.com/articles/s41564-020-00838-z/figures/4) of the existing study.
+
 ![figure5bc.png][]
+
+As a first step, let's examine the tree from **Figure 4.b** in Auspice. We can do this by searching for one of the genomic samples `Scotland/CVR50` in Auspice:
+
+1. Select genome `Scotland/CVR50` by using the **Filter Data** box:
+
+   ![filter-by.png][]
+
+2. Use a combination of **Zoom to Selected** and the zoom out button (magnifying glass) to show the set of genomic samples around `Scotland/CVR50`.
+
+   ![zoom-to-selected][]
+
+3. Select the **Trash icon** for the filter to remove it and select to **Color by** `travel_hx` (Travel history). When you are finished you should see something like below.
+
+   ![selected-subtree.png][]
+
+Compare this tree from that in **Figure 4.b** above. Are there differences? Is **Figure 4.b** a *Divergence* tree or a *Time* tree? Can you spot the two cases associated with travel to Italy in the prior 2 weeks?
+
+Try out the same procedure for the clade from **Figure 4.c** (search for `Scotland/GCVR-17033E`). Does it also look simlar?
+
+---
+
+<a name="end"></a>
+# 6. End of lab
+
+You've made it to the end of the lab. Awesome job. If you find you have some extra time, you can explore the data in Auspice further. For example, perhaps try colouring by `cog_lineage` (Pangolin lineage).
+
 
 [Augur]: https://docs.nextstrain.org/projects/augur/en/stable/index.html
 [mafft]: https://mafft.cbrc.jp/alignment/software/
@@ -373,3 +404,6 @@ Now you can spend some time to explore the data and get used to the Auspice inte
 [figure5bc.png]: images/figure5bc.png
 [tree-alignment.png]: images/tree-alignment.png
 [augur_analysis_sketch.png]: images/augur_analysis_sketch.png
+[filter-by.png]: images/filter-by.png
+[zoom-to-selected.png]: images/zoom-to-selected.png
+[selected-subtree.png]: images/selected-subtree.png
