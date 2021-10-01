@@ -371,7 +371,7 @@ As a first step, let's examine the tree from **Figure 4.b** in Auspice. We can d
 
 2. Use a combination of **Zoom to Selected** and the zoom out button (magnifying glass) to show the set of genomic samples around `Scotland/CVR50`.
 
-   ![zoom-to-selected][]
+   ![zoom-to-selected.png][]
 
 3. Select the **Trash icon** for the filter to remove it and select to **Color by** `travel_hx` (Travel history). When you are finished you should see something like below.
 
