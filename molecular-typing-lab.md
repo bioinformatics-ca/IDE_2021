@@ -48,7 +48,7 @@ as a model system for _Campylobacter_ transmission in humans. Samples have been
 taken from a population of wild raccoons, isolated, and sequenced on an Illumina
 MiSeq. Your lab's bioinformatician has already taken care of assembling whole
 genome sequences as well as  _in silico_ molecular typing including 7-gene
-Multilocus Sequence Typing (MLST), and a 594-locus core genome multilocus
+Multilocus Sequence Typing (MLST), and a 595-locus core genome multilocus
 sequence typing scheme. You have been provided with these data, and you are to
 analyze it for outbreak detection.
 
@@ -307,7 +307,7 @@ qplot(data = missing_per_locus, x = n_bad, geom = "histogram", binwidth=1)
 ```
 ```
 > missing_per_locus
-# A tibble: 594 × 2
+# A tibble: 595 × 2
    locus       n_bad
    <chr>       <int>
  1 tktA           50
@@ -363,4 +363,6 @@ missing loci on a pairwise basis?
 
 There is another locus which we may want to discard, albeit not because of
 missing data. It has another problem. What is it?
+
+### Exercise 3
 
