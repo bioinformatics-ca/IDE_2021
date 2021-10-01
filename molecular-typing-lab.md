@@ -492,9 +492,7 @@ write_delim(cluster_genome_names, "outbreak_strains.txt", col_names = FALSE)
 
 We'll use `snippy` to SNP type the outbreak strains.
 
-
-We won't run this now, as it is snippy takes too long to run. In your terminal
-you _would have done_:
+In your **terminal**:
 
 ```bash
 conda activate snippy
@@ -507,9 +505,32 @@ done < outbreak_strains.txt
 
 for strain in outbreak_strains/*.fasta; do
     name=$(basename $strain .fasta)
-    snippy --outdir outbreak_snps/$name --ref NCTC11168.gbk --ctgs $strain
+    snippy --cpus 4 --outdir outbreak_snps/$name --ref NCTC11168.fasta --ctgs $strain
 done
 
-snippy-core outbreak_snps/*
+snippy-core outbreak_snps/* --ref NCTC11168.fasta
 ```
 
+Going back to R, we can load in the Core SNPs, and draw a SNP tree of the
+outbreak strains.
+
+```R
+core_snps <- 
+  read_tsv("core.tab") %>% 
+  select(-CHR, -REF) %>% 
+  pivot_longer(-POS, names_to = "genome") %>% 
+  pivot_wider(names_from = "POS") %>% 
+  column_to_rownames("genome")
+
+core_snp_tree <- 
+  dist.gene(core_snps, method="pairwise") %>%
+  hclust() %>% 
+  as.phylo()
+
+ggtree(core_snp_tree, layout="circular") %<+% 
+  metadata +
+  geom_tiplab() +
+  geom_label(aes(x = branch, label = branch.length))
+```
+
+![SNP Tree](images/snp.png)
