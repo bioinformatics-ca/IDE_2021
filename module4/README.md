@@ -213,21 +213,31 @@ We will now spend some time to take a look at the phylogenetic tree we have cons
 
 **Commands**
 ```bash
+# Time: 20 seconds
 alignbuddy alignment.fasta -er "0:100" > alignment.100.fasta
-ete3 view -m r -t tree.subs.nwk -i tree.pdf --alg alignment.100.fasta --alg_type fullseq --alg_format fasta
+
+# Time: 10 seconds
+QT_QPA_PLATFORM="offscreen" ete3 view -m r -t tree.subs.nwk -i tree.pdf --alg alignment.100.fasta --alg_type fullseq --alg_format fasta
 ```
 
 As output you should expect to see:
 
 **Output**
 ```
-
+/usr/local/conda/envs/augur/lib/python3.8/site-packages/ete3-3.1.2-py3.7.egg/ete3/evol/parser/codemlparser.py:221: SyntaxWarning: "is" with a literal. Did you mean
+"=="?
+/usr/local/conda/envs/augur/lib/python3.8/site-packages/ete3-3.1.2-py3.7.egg/ete3/evol/parser/codemlparser.py:221: SyntaxWarning: "is" with a literal. Did you mean
+"=="?
+Warnning: [1] terminal nodes could not be found in the alignment.
 ```
+
+*Note: `alignbuddy` produces no output and the warnings produced by `ete3` can be ignored.*
 
 What these commands do is:
 
 1. `alignbuddy alignment.fasta -er "0:100" > alignment.100.fasta`: This extracts the first 100 bp from our multiple sequence alignment and saves to a file **alignment.100.fasta**.
 2. `ete3 view ...`: This draw the phylogenetic tree (`-t tree.subs.nwk`) alongside the alignment (`--alg alignment.100.fasta`) and saves to a a PDF file (`-i tree.pdf`).
+    * `QT_QPA_PLATFORM="offscreen"`: This needs to come before `ete3`. This is needed since the machines on AWS don't have a graphical window system (X Server) attached so we need to tell `ete3` that this is expected (e.g., display is "offscreen").
 
 Once we have the PDF file saved, you should be able to go to <http://YOUR-MACHINE/module4/analysis/tree.pdf> and view the tree alongside the first 100 bp of the alignment. This will be a pretty big drawing but should look something like:
 
