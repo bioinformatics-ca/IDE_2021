@@ -86,9 +86,22 @@ augur 13.0.0
 <a name="ex1"></a>
 # 4. Building the phylogenetic tree
 
-The overall goal of this 
+The overall goal of this lab is to make use of a set of SARS-CoV-2 genomes sequenced and analyzed by the paper to construct our own phylogenetic tree and visualize our epidemiological metadata on top of this tree to gain insight into the early spread of COVID-19 within Scotland. To do this, we will make use of the [Augur][] tool suite, which powers the [NextStrain](https://nextstrain.org/) website.
 
-## 4.1. Overview
+An overview of the basic usage of Augur is as follows (figure from the Augur documentation):
+
+![augur_analysis_sketch.png][]
+
+These steps are as follows (we add in an additional **visualize** step to take a look at some of the output files produced by the Augur pipeline).
+
+* **filter**: This step extracts a subset of SARS-CoV-2 genomes to be used to build a phylogenetic tree.
+* **align**: This step constructs a multiple sequence alignment from this subset of genomes.
+* **tree**: This step builds a phylogenetic tree, where branch lengths are measured in substitutions/site (a divergence tree).
+* **(Additional step) visualize**: We add this step into the overal Augur pipeline to visualize the constructed tree.
+* **refine**: This step constructs a time tree using our existing tree alongside collection dates of SARS-CoV-2 genomic samples (branch lengths are measured in time).
+* **export**: This step exports the data to be used by [Auspice][], a version of the visualization system used by NextStrain that lets you examine your own phylogenetic tree and metadata.
+
+Once these steps are completed, we will spend some time comparing the phylogenetic tree and epidemiological metadata to the results published in the existing study.
 
 ---
 
@@ -194,7 +207,37 @@ Another output file is `alignment-delim.iqtree.log`, which contains additional i
 
 ---
 
-## Step 4: Building a TimeTree (`augur refine`)
+## Step 4: Visualize tree alongside the alignment
+
+We will now spend some time to take a look at the phylogenetic tree we have constructed using [iqtree][] alongside the input multiple sequence alignment used to construct the tree. We will be using the [ETEToolkit][] to visualize the tree alongside the alignment. However, the full alignment is quite long, so we will use the [BuddySuite][] set of tools to select only a portion of the alignment to view. To do this please run the following:
+
+**Commands**
+```bash
+alignbuddy alignment.fasta -er "0:100" > alignment.100.fasta
+ete3 view -m r -t tree.subs.nwk -i tree.pdf --alg alignment.100.fasta --alg_type fullseq --alg_format fasta
+```
+
+As output you should expect to see:
+
+**Output**
+```
+
+```
+
+What these commands do is:
+
+1. `alignbuddy alignment.fasta -er "0:100" > alignment.100.fasta`: This extracts the first 100 bp from our multiple sequence alignment and saves to a file **alignment.100.fasta**.
+2. `ete3 view ...`: This draw the phylogenetic tree (`-t tree.subs.nwk`) alongside the alignment (`--alg alignment.100.fasta`) and saves to a a PDF file (`-i tree.pdf`).
+
+Once we have the PDF file saved, you should be able to go to <http://YOUR-MACHINE/module4/analysis/tree.pdf> and view the tree alongside the first 100 bp of the alignment. This will be a pretty big drawing but should look something like:
+
+![tree-alignment.png][]
+
+On the right you can see the first 100 bp of the alignment (note that many of the beginning bp are gaps `-` or ambiguous bases `N` due to issues with sequencing). On the left you can see the phylogenetic tree. We will discuss a bit more in class on how to interpret phylogenetic trees.
+
+---
+
+## Step 5: Building a TimeTree (`augur refine`)
 
 The tree output by [iqtree][] shows hypothetical evolutionary relationships between different SARS-CoV-2 genomes with branch lengths representing distances between different genomes (in units of **substitutions/site** or the predicted number of substitutions between genomes divided by the alignment length). However, other methods of measuring distance between genomes are possible. In particular we can incorporate the collection dates of the different SARS-CoV-2 genomes to infer a tree where branches are scaled according to the elapsed time. Such trees are called **time trees**.
 
@@ -241,7 +284,7 @@ As output, the file `tree.time.nwk` will contain the time tree while the file `r
 
 ---
 
-## Step 5: Package up data for Auspice (`augur export`)
+## Step 6: Package up data for Auspice (`augur export`)
 
 We will be using [Auspice][] to visualize the tree alongside our metadata. To do this, we need to package up all of the data we have so far into a special file which can be used by Auspice. To do this, please run the following command:
 
@@ -267,7 +310,7 @@ The file `analysis-package.json` contains both the tree as well as the different
 
 ---
 
-# 5. Visualizing the phylogenetic tree
+# 5. Visualizing the phylogenetic tree alongside epidemiological metadata
 
 Now that we've constructed and packaged up a tree (`analysis-package.json`), we can visualize this data alongside our metadata (`filtered.tsv`) using [Auspice][].
 
@@ -308,6 +351,8 @@ Now you can spend some time to explore the data and get used to the Auspice inte
 [Augur]: https://docs.nextstrain.org/projects/augur/en/stable/index.html
 [mafft]: https://mafft.cbrc.jp/alignment/software/
 [iqtree]: http://www.iqtree.org/
+[ETEToolkit]: http://etetoolkit.org/
+[BuddySuite]: https://github.com/biologyguy/BuddySuite
 [treetime]: https://treetime.readthedocs.io/en/latest/
 [Auspice]: https://auspice.us/
 [drag-and-drop.png]: images/drag-and-drop.png
@@ -316,3 +361,5 @@ Now you can spend some time to explore the data and get used to the Auspice inte
 [auspice-metadata-warnings.png]: images/auspice-metadata-warnings.png
 [auspice-panel.png]: images/auspice-panel.png
 [figure5bc.png]: images/figure5bc.png
+[tree-alignment.png]: images/tree-alignment.png
+[augur_analysis_sketch.png]: images/augur_analysis_sketch.png
