@@ -14,10 +14,10 @@ modified: September 30, 2021
 # Table of contents
 1. [Introduction](#intro)
 2. [Software](#software)    
-2. [Exercise Setup](#setup)
-3. [Exercise 1](#ex1)
-4. [Exercise 2](#ex2)
-5. [Paper](#paper)
+3. [Exercise setup](#setup)
+4. [Building a tree](#build-tree)
+5. [Visualizing the tree](#visualize-tree)
+6. [End of Lab](#end)
 
 <a name="intro"></a>
 # 1. Introduction
@@ -44,19 +44,27 @@ The sequenced genomes from this study are available as part of the [COG-UK Conso
 
 ## 3.1. Copy data files
 
-To begin, we will copy over the exercises to `~/workspace`. This let's use view the resulting output files in a web browser.
+To begin, we will copy over the necesssary files to `~/workspace`.
 
 **Commands**
 ```bash
-cp -r ~/CourseData/IDE_data/module6/module6_workspace/ ~/workspace/
-cd ~/workspace/module6_workspace/analysis
+cp -r ~/CourseData/IDE_data/module4/ workspace/
+cd ~/workspace/module4
 ```
 
-When you are finished with these steps you should be inside the directory `/home/ubuntu/workspace/module6_workspace/analysis`. You can verify this by running the command `pwd`.
+When you are finished with these steps you should be inside the directory `/home/ubuntu/CourseData/IDE_data/module4`. You can verify this by running the command `pwd`.
 
 **Output after running `pwd`**
 ```
-/home/ubuntu/workspace/module6_workspace/analysis
+/home/ubuntu/CourseData/IDE_data/module4
+```
+
+You should also see a directory `data/` in the current directory which contains all the input data. You can verify this by running `ls data`:
+
+**Output after running `ls data`**
+```
+MethodsToGetData.md          cog_all.2021-09-27.index  cog_all.index              cog_metadata_2021-09-27.csv.xz  metadata.csv  source_data_fig_1.xlsx
+cog_all.2021-09-27.fasta.xz  cog_all.fasta.xz          cog_global_tree.newick.xz  combine-metadata.ipynb          reference
 ```
 
 ## 3.2. Activate environment
@@ -65,42 +73,246 @@ Next we will activate the [conda](https://docs.conda.io/en/latest/) environment,
 
 **Commands**
 ```bash
-conda activate cbw-emerging-pathogen
+conda activate augur
 ```
 
-You should see the command-prompt (where you type commands) switch to include `(cbw-emerging-pathogen)` at the beginning, showing you are inside this environment. You should also be able to run one of the commands like `kraken2` and see output:
+You should see the command-prompt (where you type commands) switch to include `(augur)` at the beginning, showing you are inside this environment. You should also be able to run the `augur` command like `augur --version` and see output:
 
-**Output after running `kraken2 --version`**
+**Output after running `augur --version`**
 ```
-Kraken version 2.1.2
-Copyright 2013-2021, Derrick Wood (dwood@cs.jhu.edu)
+augur 13.0.0
 ```
 
 <a name="ex1"></a>
-# 4. Exercise
+# 4. Building the phylogenetic tree
 
-## 4.1. Patient Background:
+The overall goal of this 
 
-*Write background here.*
-
-## 4.2. Overview
-
-We will proceed through the following steps to attempt to diagnose the situation.
-
-* Trim and clean reads using `fastp`
-* Filter host reads with `kat`
-* Run Kraken2 with a bacterial and viral database to look at the taxonomic makeup of the reads.
-* Assemble metatranscriptome with `megahit`
-* Examine assembly using `quast` and `blast`
+## 4.1. Overview
 
 ---
 
-### Step 1: Extract a subset of all SARS-CoV-2 genomes to work with
+## Step 1: Extract a subset of SARS-CoV-2 genomes (`augur filter`)
+
+The file `data/cog_all.fasta.xz` contains all the SARS-CoV-2 genomic sequence data from COG-UK (around 1 million at the end of September 2021). This is much more than what we want to work with. So the first step is to filter the set of genomic samples to only a small subset.
+
+We will use the `augur filter` command to do this. This command can filter based on a number of criteria, but we will fitler based on matching entries in the `metadata.csv` file. To do this please run the following:
+
+**Commands**
+```bash
+# Time: 2 minutes
+augur filter --metadata data/metadata.csv --sequences data/cog_all.fasta.xz --sequence-index data/cog_all.index --output filtered.fasta --output-metadata filtered.tsv
+```
+
+You should not expect to see any output from this command until it is finished, which will look like:
+
+**Output**
+```
+1055520 strains were dropped during filtering
+        1055520 had no metadata
+1324 strains passed all filters
+```
+
+This lets us know that we've reduced our dataset from **1 million** down to **1324** SARS-CoV-2 genomes, which is a much more managable size.
+
+The output files produced are `filtered.fasta` and `filtered.tsv`, which is our reduced sequence data and metadata to be used for later stages.
 
 ---
+
+## Step 2: Construct a multiple sequence alignment of the genomes (`augur align`)
+
+The next step is to construct a multiple sequence alignment of the genomes, which is required before building a phylogenetic tree. We will be using the command `augur align` to accomplish this task, but underneath this runs [mafft][] to construct the alignment.
+
+To construct the alignment, please run the following:
+
+**Commands**
+```bash
+# Time: 7 minutes
+augur align --nthreads 4 --sequences filtered.fasta -o alignment.fasta --reference-sequence data/reference/MN908947.fasta
+```
+
+You should expect to see the following:
+
+**Output**
+```
+using mafft to align via:
+        mafft --reorder --anysymbol --nomemsave --adjustdirection --thread 4 alignment.fasta.to_align.fasta 1> alignment.fasta 2> alignment.fasta.log
+
+        Katoh et al, Nucleic Acid Research, vol 30, issue 14
+        https://doi.org/10.1093%2Fnar%2Fgkf436
+
+[...]
+
+5bp insertion at ref position 11074
+        TTT: Scotland/EDB5638/2020, Scotland/GCVR-17028C/2020, Scotland/GCVR-170073/2020, Scotland/GCVR-1717B9/2020
+        TTTTT: Scotland/CVR93/2020
+1bp insertion at ref position 23903
+        WARNING: this insertion was caused due to 'N's or '?'s in provided sequences
+1bp insertion at ref position 23958
+        WARNING: this insertion was caused due to 'N's or '?'s in provided sequences
+Trimmed gaps in MN908947 from the alignment
+```
+
+The meaning of each parameter is as follows:
+
+* `--nthreads 4`: Use 4 threads for the alignment.
+* `---sequences filtered.fasta`: The input set of sequences in FASTA format.
+* `-o alignment.fasta`: The output alignment, in FASTA format.
+* `--reference-sequence data/reference/MN908947.fasta`: The reference genome (the Wuhan-Hu 1 genome). This will be included in our alignment and `augur align` will, once the alignment is constructed, remove any insertions with respect to this reference genome (useful when identifying and naming specific mutations later on in the augur pipeline).
+
+Once the alignment is complete, you should have a file `alignment.fasta` in your directory. Note that this is a very similar format as the input file `filtered.fasta`, but the difference is that gaps `-` have been inserted into `alignment.fasta` such that every sequence in this file is aligned with each other.
+
+---
+
+## Step 3: Build a Maximum Liklihood phylogenetic tree (`augur tree`)
+
+The next step is to take the set of aligned genomes `alignment.fasta` and build a phylogenetic tree. We will use `augur tree` for this, but underneath it runs [iqtree][], which uses the Maximim Likihood method to build a phylogenetic tree. To build a tree, please run the following:
+
+**Commands**
+```bash
+# Time: 40 seconds
+augur tree --nthreads 4 --alignment alignment.fasta -o tree.subs.nwk
+```
+
+You should expect to see the following as output:
+
+**Output**
+```
+Building a tree via:
+        iqtree2 -ninit 2 -n 2 -me 0.05 -nt 4 -s alignment-delim.fasta -m GTR  > alignment-delim.iqtree.log
+        Nguyen et al: IQ-TREE: A fast and effective stochastic algorithm for estimating maximum likelihood phylogenies.
+        Mol. Biol. Evol., 32:268-274. https://doi.org/10.1093/molbev/msu300
+
+[...]
+
+Building original tree took 39.57634449005127 seconds
+```
+
+This produces as output a `tree.subs.nwk` file, which is the actual phylogenetic tree (in Newick format). You can load this file in a variety of phylogenetic tree viewers (such as <http://phylo.io/>) but we will further refine this file to work with Auspice.
+
+Another output file is `alignment-delim.iqtree.log`, which contains additional information from [iqtree][]. You can take a look at this file to get an idea of what [iqtree][] was doing. As iqtree uses a Maximum Liklihood approach, you will see that it will report the likeihood score of the optimal tree (reported as log-likehoods since likelihood values are very very small for these sorts of data analysis).
+
+---
+
+## Step 4: Building a TimeTree (`augur refine`)
+
+The tree output by [iqtree][] shows hypothetical evolutionary relationships between different SARS-CoV-2 genomes with branch lengths representing distances between different genomes (in units of **substitutions/site** or the predicted number of substitutions between genomes divided by the alignment length). However, other methods of measuring distance between genomes are possible. In particular we can incorporate the collection dates of the different SARS-CoV-2 genomes to infer a tree where branches are scaled according to the elapsed time. Such trees are called **time trees**.
+
+We will use [TreeTime][] to infer a **time tree** from our phylogenetic tree using collection dates of the SARS-CoV-2 genomes stored in the `filtered.csv` metadata file. We will use the `augur refine` step to run TreeTime and perform some additional refinemint of the tree. To do this, please run the following:
+
+**Commands**
+```bash
+# Time: 5 minutes
+augur refine --alignment alignment.fasta --tree tree.subs.nwk --metadata filtered.tsv --timetree --divergence-units mutations --output-tree tree.time.nwk --output-node-data refine.node.json
+```
+
+You should expect to see the following as output:
+
+**Output**
+```
+augur refine is using TreeTime version 0.8.4
+
+21.73   WARNING: Previous versions of TreeTime (<0.7.0) RECONSTRUCTED sequences of
+        tips at positions with AMBIGUOUS bases. This resulted in unexpected
+        behavior is some cases and is no longer done by default. If you want to
+        replace those ambiguous sites with their most likely state, rerun with
+        `reconstruct_tip_states=True` or `--reconstruct-tip-states`.
+[...]
+
+Inferred a time resolved phylogeny using TreeTime:
+        Sagulenko et al. TreeTime: Maximum-likelihood phylodynamic analysis
+        Virus Evolution, vol 4, https://academic.oup.com/ve/article/4/1/vex042/4794731
+
+updated tree written to tree.time.nwk
+node attributes written to refine.node.json
+```
+
+The parameters we used are:
+
+* `--alignment alignment.fasta`: The alignment used to build the tree. Used to re-scale the divergence units.
+* `--tree tree.subs.nwk`: The input tree build using **iqtree**.
+* `--metadata filtered.tsv`: The metadata which contains the SARS-CoV-2 genome names (in a column called `strain`) and the sample collection dates (in a column named `date`).
+* `--timetree`: Build a time tree.
+* `--divergence-units mutations`: Convert the branch lengths of **substitutions/site** (**mutations/site**) to **mutations** (not needed to build a time tree, this is just used for visualizing the tree later on).
+* `--output-tree tree.time.nwk`: The output Newick file containing the time tree.
+* `--output-node-data refine.node.json`: Augur will store additional information here which will let us convert between time trees and substitution trees.
+
+As output, the file `tree.time.nwk` will contain the time tree while the file `refine.node.json` contains additional information about the tree.
+
+---
+
+## Step 5: Package up data for Auspice (`augur export`)
+
+We will be using [Auspice][] to visualize the tree alongside our metadata. To do this, we need to package up all of the data we have so far into a special file which can be used by Auspice. To do this, please run the following command:
+
+**Commands**
+```bash
+# Time: 1 second
+augur export v2 --tree tree.time.nwk --node-data refine.node.json --title "Example Augur" --output analysis-package.json
+```
+
+You should expect to see the following as output:
+
+**Output**
+```
+WARNING: You didn't provide information on who is maintaining this analysis.
+
+Validating produced JSON
+Validating schema of 'analysis-package.json'...
+Validating that the JSON is internally consistent...
+Validation of 'analysis-package.json' succeeded.
+```
+
+The file `analysis-package.json` contains both the tree as well as the different branch length units (time and sustitutions) as well as additional data.
+
+---
+
+# 5. Visualizing the phylogenetic tree
+
+Now that we've constructed and packaged up a tree (`analysis-package.json`), we can visualize this data alongside our metadata (`filtered.tsv`) using [Auspice][].
+
+---
+
+## Step 1: Load data into Auspice
+
+To do this, please navigate to <http://YOUR-MACHINE/module4/analysis/> and download the files `analysis-package.json` and `filtered.tsv` to your computer (if the link does not download you can **Right-click** and select **Save link as...**).
+
+Next, navigate to <https://auspice.us/> and drag the file `analysis-package.json` onto the page.
+
+![drag-and-drop.png][]
+
+This should result in a phylogenetic tree being loaded that looks like:
+
+![auspice-main.png][]
+
+Next, we will load the metadata `filtered.tsv` file onto this view. To do this, please find and drag-and-drop the `filtered.tsv` file onto the phylogenetic tree shown in Auspice:
+
+![auspice-drag-metadata.png][]
+
+You main get some warning messages showing up, but you should still see a green **Added metadata from filtered.tsv** message.
+
+![auspice-metadata-warnings.png][]
+
+---
+
+## Step 2: Explore data
+
+Now you can spend some time to explore the data and get used to the Auspice interface. Try switching between different **Tree Layouts**, or different **Branch Lengths**, or colouring the tree by different criteria in the metadata table.
+
+![auspice-panel.png][]
+
+## Step 3: Examine particular clades
+
+![figure5bc.png][]
 
 [Augur]: https://docs.nextstrain.org/projects/augur/en/stable/index.html
 [mafft]: https://mafft.cbrc.jp/alignment/software/
 [iqtree]: http://www.iqtree.org/
 [treetime]: https://treetime.readthedocs.io/en/latest/
 [Auspice]: https://auspice.us/
+[drag-and-drop.png]: images/drag-and-drop.png
+[auspice-main.png]: images/auspice-main.png
+[auspice-drag-metadata.png]: images/auspice-drag-metadata.png
+[auspice-metadata-warnings.png]: images/auspice-metadata-warnings.png
+[auspice-panel.png]: images/auspice-panel.png
+[figure5bc.png]: images/figure5bc.png
