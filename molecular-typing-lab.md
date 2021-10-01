@@ -142,6 +142,8 @@ Now that we have calculated a tree, we can plot it.
 plot(mlst_tree)
 ```
 
+![Ugly MLST](images/ugly_mlst.png)
+
 Unfortunately, this tree is ugly and hard to read. We can draw much nicer trees
 using `ggtree`. We'll also read in a metadata file which contains auxiliary
 information about our isolates.
@@ -156,6 +158,8 @@ ggtree(mlst_tree, layout = "radial") %<+% metadata +
   geom_tiplab(size = 2.0) 
   
 ```
+
+![mlst ggtree](images/mlst.png)
 
 Now our tree is much more aesthetically pleasing, but more crucially, easier to
 read.
@@ -210,6 +214,8 @@ raw_cgmlst_tree <- calculate_tree(raw_cgmlst_calls, pairwise.deletion = FALSE)
 
 ggtree(raw_cgmlst_tree, layout = "radial")
 ```
+
+![Raw cgMLST](images/raw_cgmlst.png)
 
 This tree derived from cgMLST allele calls does not look particularly different
 from the 7-gene MLST tree we drew earlier. What could be affecting this?
@@ -355,6 +361,8 @@ filtered_cgmlst_tree <- calculate_tree(filtered_cgmlst_calls,
 ggtree(filtered_cgmlst_tree, layout="radial")
 ```
 
+![Filtered cgMLST](images/filtered_cgmlst.png)
+
 We can see greater discrimination between similar strains now that we have
 cleaned our data. What would the relative merits have been to not removing
 missing loci on a pairwise basis?
@@ -407,6 +415,8 @@ We can also draw the two trees side-by-side to aid comparison.
 plot_list(animal_tree, time_tree,  ncol=2)
 ```
 
+![Side by Side](images/sidebyside.png)
+
 Can you spot the outbreak?
 
 We can narrow the search by highlighting closely-related clusters with several
@@ -447,6 +457,8 @@ cluster_labelled_tree <-  base_cgmlst_tree +
 
 cluster_labelled_tree
 ```
+
+![Clusters](images/clusters.png)
 
 #### Exercise 3 Bonus
 
