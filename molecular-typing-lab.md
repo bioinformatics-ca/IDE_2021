@@ -61,6 +61,12 @@ Please feel free to ask me what modifications I've applied.
 
 ### Exercise 0 - Setting Up
 
+First, let's copy data into your workspace:
+
+```bash
+cp ~/CourseData/IDE_data/module3/*.csv ~/workspace
+```
+
 For this tutorial, we'll be using R interactively through RStudio, an integrated
 development environment for the R Language.
 
@@ -98,6 +104,7 @@ library(aplot)
 library(stringr)
 library(ggplot2)
 
+setwd("~/workspace")
 print("Hello, world!")
 ```
 
@@ -466,4 +473,43 @@ Look up the documentation for `gheatmap()` and see if you can use it as an
 alternative method for drawing metadata on trees. Although the name implies
 continuous variables, it can also show discrete variables such as the animal or
 cluster data.
+
+### Exercise 4
+
+We can extract the outbreak cluster for closer inspection via SNP typing
+methods.
+
+```R
+cluster_of_interest <- 39
+
+cluster_genome_names <-
+  clusters %>% 
+  filter(cluster == cluster_of_interest) %>% 
+  select(genome)
+  
+write_delim(cluster_genome_names, "outbreak_strains.txt", col_names = FALSE)
+```
+
+We'll use `snippy` to SNP type the outbreak strains.
+
+
+We won't run this now, as it is snippy takes too long to run. In your terminal
+you _would have done_:
+
+```bash
+conda activate snippy
+
+mkdir outbreak_strains outbreak_snps
+
+while read strain; do
+    ln -sr genomes/$strain.fasta outbreak_strains/$strain.fasta
+done < outbreak_strains.txt
+
+for strain in outbreak_strains/*.fasta; do
+    name=$(basename $strain .fasta)
+    snippy --outdir outbreak_snps/$name --ref NCTC11168.gbk --ctgs $strain
+done
+
+snippy-core outbreak_snps/*
+```
 
