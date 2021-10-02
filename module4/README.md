@@ -401,7 +401,7 @@ To view sample collection dates you can hover over the particular sample:
 
 ![view-dates.png][]
 
-Compare this to our predicted date of the most recent common ancestor to all of `UK5098`. How does this compare to the **Figure 5** above?
+Compare this to our predicted date of the most recent common ancestor to all of `UK5098`. How does this compare to the **Figure 5** above? How closely related are some of these genomes (try toggling between **Time** and **Divergence** for Branch Length)?
 
 *Note: Our data may not look exactly the same as the figure. We used slightly different software and methods from that of the paper.*
 
