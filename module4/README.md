@@ -88,7 +88,7 @@ augur 13.0.0
 <a name="build-tree"></a>
 # 4. Building the phylogenetic tree
 
-The overall goal of this lab is to make use of a set of SARS-CoV-2 genomes sequenced and analyzed by the paper to construct our own phylogenetic tree and visualize our epidemiological metadata on top of this tree to gain insight into the early spread of COVID-19 within Scotland. To do this, we will make use of the [Augur][] tool suite, which powers the [NextStrain](https://nextstrain.org/) website.
+The overall goal of this lab is to make use of a set of SARS-CoV-2 genomes sequenced and analyzed by the above study to construct our own phylogenetic tree and visualize our epidemiological metadata on top of this tree to gain insight into the early spread of COVID-19 within Scotland. To do this, we will make use of the [Augur][] tool suite, which powers the [NextStrain](https://nextstrain.org/) website.
 
 An overview of the basic usage of Augur is as follows (figure from the Augur documentation):
 
@@ -363,7 +363,7 @@ Now you can spend some time to explore the data and get used to the Auspice inte
 
 We are now going to compare the tree we constructed from the tree in [Figure 4](https://www.nature.com/articles/s41564-020-00838-z/figures/4) of the existing study.
 
-![figure5bc.png][]
+![figure4bc.png][]
 
 As a first step, let's examine the tree from **Figure 4.b** in Auspice. We can do this by searching for one of the genomic samples `Scotland/CVR50` in Auspice:
 
@@ -385,10 +385,32 @@ Try out the same procedure for the clade from **Figure 4.c** (search for `Scotla
 
 ---
 
+## Step 4: Compare predicted dates of common ancestors
+
+Time trees place the leafs of the tree at the collection date for each collected sample and predicts the dates for internal nodes (representing hypothetical ancestors). We can compare our tree (scaled by time) with **Figure 5** from the study (an excerpt seen below):
+
+![fig5.png][]
+
+This figure shows a time-scaled tree (dates are shown on the x-axis) and uses this information to infer the lag time (difference between the time of the common ancestor to this clade and the first collected sample).
+
+To compare this figure to our tree, we can search for the listed lineage (`UK5098`) and zoom into this clade.
+
+![search-by-lineage.png][]
+
+To view sample collection dates you can hover over the particular sample:
+
+![view-dates.png][]
+
+Compare this to our predicted date of the most recent common ancestor to all of `UK5098`. How does this compare to the **Figure 5** above?
+
+*Note: Our data may not look exactly the same as the figure. We used slightly different software and methods from that of the paper.*
+
+---
+
 <a name="end"></a>
 # 6. End of lab
 
-You've made it to the end of the lab. Awesome job. If you find you have some extra time, you can explore the data in Auspice further. For example, perhaps try colouring by `cog_lineage` (Pangolin lineage).
+You've made it to the end of the lab. Awesome job. If you find you have some extra time, you can explore the data in Auspice further and perhaps compare the tree we have generated to the figures from the study ([Figure 4](https://www.nature.com/articles/s41564-020-00838-z/figures/4) or [Figure 5](https://www.nature.com/articles/s41564-020-00838-z/figures/5)).
 
 
 [Augur]: https://docs.nextstrain.org/projects/augur/en/stable/index.html
@@ -403,9 +425,12 @@ You've made it to the end of the lab. Awesome job. If you find you have some ext
 [auspice-drag-metadata.png]: images/auspice-drag-metadata.png
 [auspice-metadata-warnings.png]: images/auspice-metadata-warnings.png
 [auspice-panel.png]: images/auspice-panel.png
-[figure5bc.png]: images/figure5bc.png
+[figure4bc.png]: images/figure4bc.png
 [tree-alignment.png]: images/tree-alignment.png
 [augur_analysis_sketch.png]: images/augur_analysis_sketch.png
 [filter-by.png]: images/filter-by.png
 [zoom-to-selected.png]: images/zoom-to-selected.png
 [selected-subtree.png]: images/selected-subtree.png
+[fig5.png]: images/fig5.png
+[search-by-lineage.png]: images/search-by-lineage.png
+[view-dates.png]: images/view-dates.png
