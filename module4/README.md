@@ -387,7 +387,7 @@ Try out the same procedure for the clade from **Figure 4.c** (search for `Scotla
 
 ## Step 4: Compare predicted dates of common ancestors
 
-Time trees place the leafs of the tree at the collection date for each collected sample and predicts the dates for internal nodes (representing hypothetical ancestors). We can compare our tree (scaled by time) with **Figure 5** from the study (an excerpt seen below):
+Time trees place the leafs of the tree at the collection date for each collected sample and predicts the dates for internal nodes (representing hypothetical ancestors). We can compare our tree (scaled by time) with [Figure 5](https://www.nature.com/articles/s41564-020-00838-z/figures/5) from the study (an excerpt seen below):
 
 ![fig5.png][]
 
