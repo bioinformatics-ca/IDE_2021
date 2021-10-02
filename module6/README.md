@@ -410,7 +410,7 @@ To view these results, please browse to <http://YOUR-MACHINE/module6_workspace/a
 
 ---
 
-<a href="final"></a>
+<a name="final"></a>
 # 5. Final words
 
 Congratulations, you've finished this lab. As a final check on your results, you can use [NCBI's online tool](https://blast.ncbi.nlm.nih.gov/Blast.cgi) to perform a BLAST on a larger database to see if you get any better matches.
