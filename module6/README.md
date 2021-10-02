@@ -1,24 +1,22 @@
 ---
 layout: tutorial_page
 permalink: /epidemiology_2021_EPD_IMS
-title: Genomic Epidemiology
+title: Infectious Disease Epidemiology Analysis
 header1: Emerging Pathogen Detection and Identification using Metagenomic Samples
 header2: Infectious Disease Genomic Epidemiology
-image: /site_images/CBW_wshop-epidem_map-icon.png
+image: /site_images/CBW_Metagenome_icon.jpg
 home: https://bioinformaticsdotca.github.io/epidemiology_2021
 description: Emerging Pathogen Detection and Identification using Metagenomic Samples
-author: Gary Van Domselaar, Aaron Petkau
-modified: September 29th, 2021
+author: Aaron Petkau and Gary Van Domselaar
+modified: October 2nd, 2021
 ---
-
 
 # Table of contents
 1. [Introduction](#intro)
 2. [Software](#software)    
-2. [Exercise Setup](#setup)
-3. [Exercise 1](#ex1)
-4. [Exercise 2](#ex2)
-5. [Paper](#paper)
+3. [Setup](#setup)
+4. [Exercise](#exercise)
+5. [Final words](#final)
 
 <a name="intro"></a>
 # 1. Introduction
@@ -74,26 +72,30 @@ Kraken version 2.1.2
 Copyright 2013-2021, Derrick Wood (dwood@cs.jhu.edu)
 ```
 
-<a name="ex1"></a>
+<a name="exercise"></a>
 # 4. Exercise
 
 ## 4.1. Patient Background:
 
-*Write background here.*
+A 41-year-old man was admitted to a hospital 6 days after the onset of disease. He reported fever, chest tightness, unproductive cough, pain and weakness. Preliminary investigations excluded the presence of influenza virus, *Chlamydia pneumoniae*, *Mycoplasma pneumoniae*, and other common respiratory pathogens. After 3 days of treatment the patient was admitted to the intensive care unit, and 6 days following admission the patient was transferred to another hospital.
+
+To further investigate the cause of illness, a sample of bronchoalveolar lavage fluid (BALF) was collected from the patient and metatranscriptomic sequencing was performed (that is, the RNA from the sample was sequenced). In this lab, you will examine the metatranscriptomic data using a number of bioinformatics methods and tools to attempt to identify the cause of the illness.
+
+*Note: The patient information and data was derived from a real study (shown at the end of the lab).* 
 
 ## 4.2. Overview
 
 We will proceed through the following steps to attempt to diagnose the situation.
 
-* Trim and clean reads using `fastp`
-* Filter host reads with `kat`
+* Trim and clean sequence reads using `fastp`
+* Filter host (human) reads with `kat`
 * Run Kraken2 with a bacterial and viral database to look at the taxonomic makeup of the reads.
 * Assemble metatranscriptome with `megahit`
 * Examine assembly using `quast` and `blast`
 
 ---
 
-### Step 1: Clean and examine quality of the reads
+## Step 1: Clean and examine quality of the reads
 
 Reads that come directly off of a sequencer may be of variable quality which might impact the downstream analysis. We will use the software [fastp][] to both clean and trim reads (removing poor-quality reads) as well as examine the quality of the reads. To do this please run the following:
 
@@ -105,6 +107,7 @@ fastp --detect_adapter_for_pe --in1 ../data/emerging-pathogen-reads_1.fastq.gz -
 
 You should see the following as output:
 
+**Output**
 ```
 Detecting adapter sequence for read1...
 No adapter detected for read1
@@ -121,22 +124,22 @@ fastp --detect_adapter_for_pe --in1 ../data/emerging-pathogen-reads_1.fastq.gz -
 fastp v0.22.0, time used: 34 seconds
 ```
 
-#### Examine output
+### Examine output
 
-You should now be able to nagivate to <http:[YOUR_MACHINE_URL]/module6_workspace/analysis> and see some of the output files. In particular, you should be able to find **fastp.html**, which contains a report of the quality of the reads and how many were removed. Please take a look at this report now:
+You should now be able to nagivate to <http://YOUR-MACHINE/module6_workspace/analysis> and see some of the output files. In particular, you should be able to find **fastp.html**, which contains a report of the quality of the reads and how many were removed. Please take a look at this report now:
 
 ![fastp-report][]
 
 This should show an overview of the quality of the reads before and after filtering with `fastp`. Using this report, please anser the following questions.
 
-#### Step 1: Questions
+### Step 1: Questions
 
 1. Compare the **total reads** and **total bases** before and after filtering in the `fastp` report. How do they differ?
 2. Compare the **Q30 bases** (number of bases with a quality score > 30) before and after filtering? How do they compare (compare the percentage values)?
 
 ---
 
-### Step 2: Host read filtering
+## Step 2: Host read filtering
 
 The next step is to remove any host reads (in this case Human reads) from our dataset as we are not focused on examining host reads. There are several different tools that can be used to filter out host reads such as Kraken2, BLAST, KAT and others. In this demonstration, we have selected to run KAT followed by Kraken2, but you could likely accomplish something similar directly in Kraken2.
 
@@ -154,15 +157,16 @@ Let's run KAT now.
 kat filter seq -t 4 -i -o filtered --seq cleaned_1.fastq --seq2 cleaned_2.fastq ~/CourseData/IDE_data/module6/db/kat_db/human_kmers.jf
 ```
 
-#### Command arguments:
+The arguments for this command are:
 
 * `--seq --seq2` arguments to provide corresponding forward and reverse fastq reads (the cleaned reads from `fastp`)
 * `-i` whether to output sequences not found in the kmer hash, rather than those with a database hit (host sequences). 
 * `-o filtered` Provide prefix for all files generated by the command. In our case, we will have two output files **filtered.in.R1.fastq** and **filetered.in.R2.fastq**.
 * `~/CourseData/IDE_data/module6/db/kat_db/human_kmers.jf` the human k-mer database
 
-If successfull you should see the following output on your screen:
+As the command is running you should see the following output on your screen:
 
+**Output**
 ```
 Running KAT in filter sequence mode
 -----------------------------------
@@ -186,9 +190,11 @@ If the command was successful, your current directory should contain two new fil
 * `filtered.in.R1.fastq`
 * `filtered.in.R2.fastq`
 
+These are the set of reads minus any reads that matched the human genome.
+
 ---
 
-### Step 3: Classify reads against the Kraken database
+## Step 3: Classify reads against the Kraken database
 
 Now that we have most, if not all, host reads filtered out, it’s time to classify the remaining reads.
 
@@ -204,14 +210,13 @@ kraken2 --db ~/CourseData/IDE_data/module6/db/kraken2_db --threads 4 --paired --
 
 This should produce output similar to below:
 
+**Output**
 ```
 Loading database information... done.
 1127908 sequences (315.54 Mbp) processed in 7.344s (9214.6 Kseq/m, 2577.83 Mbp/m).
   880599 sequences classified (78.07%)
   247309 sequences unclassified (21.93%)
 ```
-
----
 
 Let's examine the text-based report of Kraken2:
 
@@ -242,7 +247,7 @@ This will show the top taxonomic ranks (right-most column) as well as the percen
 
 ---
 
-### Step 4: Generate an interactive html-based report using Krona
+## Step 4: Generate an interactive html-based report using Krona
 
 Instead of reading a text-based report like above, we can visualize this information using [Krona][].
 
@@ -261,7 +266,7 @@ Let’s look at what Krona generated. Return to your web browser and refresh the
 
 Click on **final_web_report.html**. *Note: if this is not working, what you should see is shown in the image [krona-all.png][]*.
 
-#### Step 4: Questions
+### Step 4: Questions
 
 1. What does the distribution of taxa found in the reads look like? Is there any pathogen here that could be consistent with a cause for the patients symptoms?
 2. This data was derived from RNA (instead of DNA) and some viruses are RNA-based. Take a look into the **Viruses** category in Krona (by expanding this category). Is there anything here that could be consistent with the patient's symptoms? *Note: if you cannot expand the **Viruses** category what you should see is shown in this image [krona-viruses.png][].*.
@@ -269,7 +274,7 @@ Click on **final_web_report.html**. *Note: if this is not working, what you shou
 
 ---
 
-### Step 5: Metatranscriptom assembly
+## Step 5: Metatranscriptomic assembly
 
 In order to investigate the data further we will assemble the metatranscriptome using the software [Megahit][]. To do this please run the following:
 
@@ -281,6 +286,7 @@ megahit -t 4 -1 filtered.in.R1.fastq -2 filtered.in.R2.fastq -o megahit_out
 
 If everything is working you should expect to see the following as output:
 
+**Output**
 ```
 2021-09-30 11:53:35 - MEGAHIT v1.2.9
 2021-09-30 11:53:35 - Using megahit_core with POPCNT and BMI2 support
@@ -330,7 +336,7 @@ It can be a bit difficult to get an overall idea of what is in this file, so in 
 
 ---
 
-### Step 6: Evaluate assembly with Quast
+## Step 6: Evaluate assembly with Quast
 
 [Quast][] can be used to provide summary statistics on the output of assembly software. We will run Quast on our data by running the following command:
 
@@ -342,6 +348,7 @@ quast -t 4 megahit_out/final.contigs.fa
 
 You should expect to see the following as output:
 
+**Output**
 ```
 /home/ubuntu/.conda/envs/cbw-emerging-pathogen/bin/quast -t 4 megahit_out/final.contigs.fa
 
@@ -369,7 +376,7 @@ Quast writes it's output to a directory `quast_results/`, which includes HTML an
 
 This shows the length of each contig in the `megahit_out/final.contigs.fa` file, sorted by size.
 
-#### Step 6: Questions
+### Step 6: Questions
 
 1. What is the length of the largest contig in the genome? How does it compare to the length of the 2nd and 3rd largest contigs?
 2. Given that this is RNASeq data (i.e., sequences derived from RNA), what is the most common type of RNA you should expect to find? What is the approximate lengths of these RNA fragments? Is the largest contig an outlier (i.e., is it much longer than you would expect)?
@@ -377,7 +384,7 @@ This shows the length of each contig in the `megahit_out/final.contigs.fa` file,
 
 ---
 
-### Step 7: Use BLAST to look for existing organisms
+## Step 7: Use BLAST to look for existing organisms
 
 In order to get a better handle on what the identity of this large contig could be, let's use [BLAST][] to compare to a database of existing viruses. Please run the following:
 
@@ -396,16 +403,19 @@ To view these results, please browse to <http://YOUR-MACHINE/module6_workspace/a
 
 ![blast-report.png][]
 
-#### Step 7: Questions
+### Step 7: Questions
 
 1. What is the closest match for the longest contig you find in your data? Recall that if a pathogen is an emerging/novel pathogen then you may not get a perfect match to any existing organisms.
 2. Using the BLAST report alongside all other information we've gathered, what can you say about what pathogen may be causing the patient's symptoms?
 
 ---
 
-### Final words
+<a href="final"></a>
+# 5. Final words
 
 Congratulations, you've finished this lab. As a final check on your results, you can use [NCBI's online tool](https://blast.ncbi.nlm.nih.gov/Blast.cgi) to perform a BLAST on a larger database to see if you get any better matches.
+
+The source of the data and patient background information can be found at <https://doi.org/10.1038/s41586-020-2008-3> (note: clicking this link will reveal what the illness is). The only modification made to the original metatranscriptomic reads was to reduce them to 10% of the orginal file size.
 
 
 [fastp]: https://github.com/OpenGene/fastp
