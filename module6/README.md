@@ -425,6 +425,7 @@ The source of the data and patient background information can be found at <https
 [Krona]: https://github.com/marbl/Krona/wiki
 [Megahit]: https://github.com/voutcn/megahit
 [NCBI blast]: https://blast.ncbi.nlm.nih.gov/Blast.cgi
+[BLAST]: https://blast.ncbi.nlm.nih.gov/Blast.cgi
 [seqkit]: https://bioinf.shenwei.me/seqkit/
 [fastp-report]: images/fastp.png
 [kat-overview]: images/kat.png
