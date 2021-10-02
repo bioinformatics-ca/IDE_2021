@@ -391,7 +391,7 @@ Time trees place the leafs of the tree at the collection date for each collected
 
 ![fig5.png][]
 
-This figure shows a time-scaled tree (dates are shown on the x-axis) and uses this information to infer the lag time (difference between the time of the common ancestor to this clade and the first collected sample).
+This figure shows a time-scaled tree (dates are shown on the x-axis) and uses this information to infer the detection lag (difference between the time of the common ancestor to this clade and the first sequenced sample).
 
 To compare this figure to our tree, we can search for the listed lineage (`UK5098`) and zoom into this clade.
 
