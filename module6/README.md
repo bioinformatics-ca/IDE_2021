@@ -31,7 +31,7 @@ This tutorial aims to introduce a variety of software and concepts related to de
 * [KAT][]
 * [Kraken2][]
 * [Krona][]
-* [Megahit][]
+* [MEGAHIT][]
 * [Quast][]
 * [NCBI blast][]
 
@@ -55,6 +55,13 @@ When you are finished with these steps you should be inside the directory `/home
 /home/ubuntu/workspace/module6_workspace/analysis
 ```
 
+You should also have a directory like `data/` one directory up from here. To check this, you can run `ls ../`:
+
+**Output after running `ls ../`**
+```
+analysis  data  precomputed-analysis
+```
+
 ## 3.2. Activate environment
 
 Next we will activate the [conda](https://docs.conda.io/en/latest/) environment, which will have all the tools needed by this tutorial pre-installed. To do this please run the following:
@@ -64,7 +71,7 @@ Next we will activate the [conda](https://docs.conda.io/en/latest/) environment,
 conda activate cbw-emerging-pathogen
 ```
 
-You should see the command-prompt (where you type commands) switch to include `(cbw-emerging-pathogen)` at the beginning, showing you are inside this environment. You should also be able to run one of the commands like `kraken2` and see output:
+You should see the command-prompt (where you type commands) switch to include `(cbw-emerging-pathogen)` at the beginning, showing you are inside this environment. You should also be able to run one of the commands like `kraken2 --version` and see output:
 
 **Output after running `kraken2 --version`**
 ```
@@ -90,14 +97,14 @@ We will proceed through the following steps to attempt to diagnose the situation
 * Trim and clean sequence reads using `fastp`
 * Filter host (human) reads with `kat`
 * Run Kraken2 with a bacterial and viral database to look at the taxonomic makeup of the reads.
-* Assemble metatranscriptome with `megahit`
+* Assemble the metatranscriptome with `megahit`
 * Examine assembly using `quast` and `blast`
 
 ---
 
 ## Step 1: Clean and examine quality of the reads
 
-Reads that come directly off of a sequencer may be of variable quality which might impact the downstream analysis. We will use the software [fastp][] to both clean and trim reads (removing poor-quality reads) as well as examine the quality of the reads. To do this please run the following:
+Reads that come directly off of a sequencer may be of variable quality which might impact the downstream analysis. We will use the software [fastp][] to both clean and trim reads (removing poor-quality reads or sequencing adapters) as well as examine the quality of the reads. To do this please run the following (the expected time of this command is shown as `# Time: 30 seconds`) and you should **not** run this line).
 
 **Commands**
 ```bash
@@ -194,13 +201,13 @@ These are the set of reads minus any reads that matched the human genome.
 
 ---
 
-## Step 3: Classify reads against the Kraken database
+## Step 3: Classify reads against the Kraken2 database
 
 Now that we have most, if not all, host reads filtered out, it’s time to classify the remaining reads.
 
-Database selection is one of the most crucial parts of running Kraken. One of the many factors that must be considered is the computational resources available. Our current AWS image for the course has only 16G of memory. A major disadvantage of Kraken is that it loads the entire database into memory. With the [standard viral, bacterial, and archael database](https://benlangmead.github.io/aws-indexes/k2) on the order of 50 GB we would be unable to run the full database on the course machine. To help mitigate this, Kraken allows reduced databases to be constructed, which will still give reasonable results. We have constructed our own smaller Kraken database using only bacterial, human, and viral data. We will be using this database.
+Database selection is one of the most crucial parts of running Kraken. One of the many factors that must be considered is the computational resources available. Our current AWS image for the course has only 16G of memory. A major disadvantage of Kraken2 is that it loads the entire database into memory. With the [standard viral, bacterial, and archael database](https://benlangmead.github.io/aws-indexes/k2) on the order of 50 GB we would be unable to run the full database on the course machine. To help mitigate this, Kraken2 allows reduced databases to be constructed, which will still give reasonable results. We have constructed our own smaller Kraken2 database using only bacterial, human, and viral data. We will be using this database.
 
-Lets run the following command in our current directory to classify our reads against the kraken database.
+Lets run the following command in our current directory to classify our reads against the Kraken2 database.
 
 **Commands**
 ```bash
@@ -270,13 +277,13 @@ Click on **final_web_report.html**. *Note: if this is not working, what you shou
 
 1. What does the distribution of taxa found in the reads look like? Is there any pathogen here that could be consistent with a cause for the patients symptoms?
 2. This data was derived from RNA (instead of DNA) and some viruses are RNA-based. Take a look into the **Viruses** category in Krona (by expanding this category). Is there anything here that could be consistent with the patient's symptoms? *Note: if you cannot expand the **Viruses** category what you should see is shown in this image [krona-viruses.png][].*.
-3. Given The results of Krona, can you form a hypothesis as to the cause of the patient's symptoms?
+3. Given the results of Krona, can you form a hypothesis as to the cause of the patient's symptoms?
 
 ---
 
 ## Step 5: Metatranscriptomic assembly
 
-In order to investigate the data further we will assemble the metatranscriptome using the software [Megahit][]. To do this please run the following:
+In order to investigate the data further we will assemble the metatranscriptome using the software [MEGAHIT][]. To do this please run the following:
 
 **Commands**
 ```bash
@@ -316,7 +323,7 @@ ls megahit_out/
 checkpoints.txt  done  final.contigs.fa  intermediate_contigs  log  options.json
 ```
 
-It's specifically the **final.contigs.fa** file that contains our metatranscriptome assembly. This will contain the largest *contiguous* sequences Megahit was able to construct from the sequence reads. We can look at the contents with the command `head`:
+It's specifically the **final.contigs.fa** file that contains our metatranscriptome assembly. This will contain the largest *contiguous* sequences MEGAHIT was able to construct from the sequence reads. We can look at the contents with the command `head`:
 
 **Commands**
 ```bash
@@ -380,7 +387,7 @@ This shows the length of each contig in the `megahit_out/final.contigs.fa` file,
 
 1. What is the length of the largest contig in the genome? How does it compare to the length of the 2nd and 3rd largest contigs?
 2. Given that this is RNASeq data (i.e., sequences derived from RNA), what is the most common type of RNA you should expect to find? What is the approximate lengths of these RNA fragments? Is the largest contig an outlier (i.e., is it much longer than you would expect)?
-3. Is there another type of source for this RNA fragment that could explain it's length? Possibly a [Virus][https://en.wikipedia.org/wiki/Coronavirus#Genome]?
+3. Is there another type of source for this RNA fragment that could explain it's length? Possibly a [Virus](https://en.wikipedia.org/wiki/Coronavirus#Genome)?
 
 ---
 
@@ -397,7 +404,9 @@ blastn -db ~/CourseData/IDE_data/module6/db/blast_db/ref_viruses_rep_genomes_mod
 
 Here, we first use [seqkit][] to sort all contigs by length (`seqkit sort --by-length ...`) and we then extract only the top **50** longest contigs (`seqkit head -n 50`) and write these to a file **contigs-50.fa** (`> contigs-50.fa`).
 
-Next, we run [BLAST][] on these top 50 longest contigs using a pre-computed database of viral genomes (`blastn -db ~/CourseData/IDE_data/module6/db/blast_db/ref_viruses_rep_genomes_modified -query contigs-50.fa ...`). The (`-html -out blast_results.html`) tells BLAST to write it's results as an HTML file.
+*Note that the pipe `|` character will take the output of one command (`seqkit sort --by-length ...`, which sorts sequences in the file by length) and forward it into the input of another command (`seqkit head -n 50`, which takes only the first 50 sequences from the file). The greater-than symbol `>` takes the output of one command `seqkit head ...` and writes it to a file (names `contigs-50.fa`).*
+
+The next command will run [BLAST][] on these top 50 longest contigs using a pre-computed database of viral genomes (`blastn -db ~/CourseData/IDE_data/module6/db/blast_db/ref_viruses_rep_genomes_modified -query contigs-50.fa ...`). The (`-html -out blast_results.html`) tells BLAST to write it's results as an HTML file.
 
 To view these results, please browse to <http://YOUR-MACHINE/module6_workspace/analysis/blast_results.html> to view the ouptut `blast_results.html` file. This should look something like below:
 
@@ -415,7 +424,7 @@ To view these results, please browse to <http://YOUR-MACHINE/module6_workspace/a
 
 Congratulations, you've finished this lab. As a final check on your results, you can use [NCBI's online tool](https://blast.ncbi.nlm.nih.gov/Blast.cgi) to perform a BLAST on a larger database to see if you get any better matches.
 
-The source of the data and patient background information can be found at <https://doi.org/10.1038/s41586-020-2008-3> (note: clicking this link will reveal what the illness is). The only modification made to the original metatranscriptomic reads was to reduce them to 10% of the orginal file size.
+The source of the data and patient background information can be found at <https://doi.org/10.1038/s41586-020-2008-3> (**clicking this link will reveal what the illness is**). The only modification made to the original metatranscriptomic reads was to reduce them to 10% of the orginal file size.
 
 
 [fastp]: https://github.com/OpenGene/fastp
@@ -423,7 +432,7 @@ The source of the data and patient background information can be found at <https
 [KAT]: https://kat.readthedocs.io/en/latest/
 [Kraken2]: https://ccb.jhu.edu/software/kraken2/
 [Krona]: https://github.com/marbl/Krona/wiki
-[Megahit]: https://github.com/voutcn/megahit
+[MEGAHIT]: https://github.com/voutcn/megahit
 [NCBI blast]: https://blast.ncbi.nlm.nih.gov/Blast.cgi
 [BLAST]: https://blast.ncbi.nlm.nih.gov/Blast.cgi
 [seqkit]: https://bioinf.shenwei.me/seqkit/
