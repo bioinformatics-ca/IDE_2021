@@ -27,7 +27,7 @@ ___
 
 > ***Q4: What does the phylogenetic tree inform you about the relatedness of the isolates within the same outbreak and across different outbreaks?*** Isolates of the same outbreak are more phylogenetically related (higher sequence similarity) than isolates collected from different outbreaks
 
-> ***Q5: Do the isolates cluster by isolation source or isolation date?*** Isolates tend to cluster by isolate date.
+> ***Q5: Do the isolates cluster by isolation source or isolation date?*** Isolates tend to cluster by isolation date.
 ___
 ### Genome Annotation
 
