@@ -31,6 +31,27 @@ The statistics `Aligned` and `Unaligned` can provide an indication of reference 
 ___
 ### Phylogenetic analysis & visualization
 
+Plotting phylogenetic tree in R:
+```
+#load packages
+library(dplyr)
+library(ggtree)
+library(ggplot2)
+
+#load files
+metadata<-read.csv("metadata.csv")
+tree<-read.tree("tree.nwk")
+
+#visualize tree
+fig<-ggtree(tree, layout="radial") %<+% metadata+
+  geom_tiplab(aes(color=as.factor(Outbreak_no)) ,size = 2)+ #add labels to tree & colour labels by outbreak
+  xlim(0,0.5) + #zoom into the tree
+  labs(color="Outbreak")
+
+#save tree to file
+ggsave("tree.png" , fig, width = 6, height = 5, device = "png")
+```
+
 > ***Q4: What does the phylogenetic tree inform you about the relatedness of the isolates within the same outbreak and across different outbreaks?*** 
 
 Isolates of the same outbreak are more phylogenetically related (higher sequence similarity) than isolates collected from different outbreaks
