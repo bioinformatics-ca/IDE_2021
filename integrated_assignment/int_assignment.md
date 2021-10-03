@@ -59,8 +59,19 @@ Core genome alignment of the entire dataset is located at:
 ~/CourseData/IDE_Data/integrated_hw/alignment/heidelberg_core.aln
 ```
 
-Review the summary file and the core genome alignment, and answer the following questions:
+Description of SNV alignment summary headers:
+| Header | Description |
+|----|----|
+| ID | Sample identifier |
+| LENGTH | Reference sequence length (bps) |
+| ALIGNED | Reference sequence length aligned by query (bps) |
+| UNALIGNED | Reference sequence length not aligned by query (bps) |
+| VARIANT | Number of variants identified |
+| HET | Number of heterozygous sites (mixed variants) |
+| MASKED | Number of masked sites in reference sequence |
+| LOWCOV | Number of sites in reference sequence with low depth of coverage |
 
+Review the summary file and the core genome alignment, and answer the following questions:
 
 > ***Q1: What is the length of the alignment and how is this length determined?***
 
@@ -82,7 +93,7 @@ Hints:
 
 > ***Q4: What does the phylogenetic tree inform you about the relatedness of the isolates within the same outbreak and across different outbreaks?***
 
-> ***Q5: Do the isolates cluster by isolation source or isolation date?***
+> ***Q5: Do the isolates cluster by isolation source (e.g. Human, Food) or isolation date?***
 
 ___
 ### Genome Annotation
