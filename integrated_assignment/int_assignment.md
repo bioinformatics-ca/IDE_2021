@@ -16,7 +16,7 @@ author: Venus Lau & Jimmy Liu
 
 ### Introduction
 
-In this integrative assignment, you will be applying some of the genomic epidemiology analysis methods covered in this workshop. The focus of the assignment will be on Salmonella enterica, an enteric pathogen that primarily spreads by human consumption of contaminated foods in Canada and the United States. Here, you will examine isolates of Salmonella serovar Heidelberg from three epidemiologically distinct foodborne outbreaks that occurred in Quebec, Canada between 2012-2014. For more detailed background on how the outbreaks happened, you are encouraged to read over the original publication by Bekal et al. (2014). You will be analyzing the whole-genome sequencing (WGS) data generated from the study to investigate these foodborne outbreaks. Briefly, you will identify core genome single nucleotide variants (SNVs) from pre-assembled genomes, construct a core genome SNV phylogenetic tree and infer the evolutionary relationships of the isolates. In addition, you will annotate the bacterial genomes to detect the presence of various genetic features from this Salmonella outbreak dataset.
+In this integrative assignment, you will be applying some of the genomic epidemiology analysis methods covered in this workshop. The focus of the assignment will be on *Salmonella enterica*, an enteric pathogen that primarily spreads by human consumption of contaminated foods in Canada and the United States. Here, you will examine isolates of *Salmonella* serovar Heidelberg from three epidemiologically distinct foodborne outbreaks that occurred in Quebec, Canada between 2012-2014. For more detailed background on how the outbreaks happened, you are encouraged to read over the original publication by Bekal et al. (2014). You will be analyzing the whole-genome sequencing (WGS) data generated from the study to investigate these foodborne outbreaks. Briefly, you will identify core genome single nucleotide variants (SNVs) from pre-assembled genomes, construct a core genome SNV phylogenetic tree and infer the evolutionary relationships of the isolates. In addition, you will annotate the bacterial genomes to detect the presence of various genetic features from this *Salmonella* outbreak dataset.
 
 The primary goal here is to integrate evidence from the phylogeny and genome annotations to justify which isolates are most likely epidemiologically linked (belong to the same outbreak).
 
@@ -91,11 +91,11 @@ Predicting genes and other functional elements (e.g. transcriptional elements, r
 Here, you will use a tool called `ABRicate` to search for the presence of plasmids, AMR genes and virulence factors (VF). You will need to search against three different nucleotide databases that contain reference sequences of curated elements. Once you have identified the genetic elements carried by the bacterial genomes, you will generate heatmaps to visualize the results and identify any correlations amongst within-outbreak strains and between-outbreak strains.
 
 #### How to run `ABRicate`:
-* Activate the ‘abricate’ conda environment
-* Example ABRicate usage: abricate --db db_name contigs.fa > report.tab
-* The main parameter, `--db` specifies which database you would like to search against. There are different databases for different genetic elements. You can find the list of pre-downloaded sequence databases by executing: abricate --list
+* Activate the `abricate` conda environment
+* Example ABRicate usage: `abricate --db db_name contigs.fa > report.tab`
+* The main parameter, `--db` specifies which database you would like to search against. There are different databases for different genetic elements. You can find the list of pre-downloaded sequence databases by executing: `abricate --list`
 * To search for AMR genes, virulence factors, and plasmids, the database names are `card`, `vfdb`, and `plasmidfinder`, respectively
-* Once you have generated the required ABRicate outputs for all Salmonella genomes, combine the results of all genomes by executing: 
+* Once you have generated the required ABRicate outputs for all *Salmonella* genomes, combine the results of all genomes by executing: 
 ```bash
 abricate --summary /path/to/amr_results_dir/*.tab > amr_summary.tab
 ```
