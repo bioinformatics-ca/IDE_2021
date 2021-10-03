@@ -16,14 +16,14 @@ author: Venus Lau & Jimmy Liu
 
 ### Introduction
 
-In this integrative assignment, you will be applying some of the genomic epidemiology analysis methods covered in this workshop. The focus of the assignment will be on *Salmonella enterica*, an enteric pathogen that primarily spreads by human consumption of contaminated foods in Canada and the United States. Here, you will examine isolates of *Salmonella* serovar Heidelberg from three epidemiologically distinct foodborne outbreaks that occurred in Quebec, Canada between 2012-2014. For more detailed background on how the outbreaks happened, you are encouraged to read over the original publication by Bekal et al. (2014). You will be analyzing the whole-genome sequencing (WGS) data generated from the study to investigate these foodborne outbreaks. Briefly, you will identify core genome single nucleotide variants (SNVs) from pre-assembled genomes, construct a core genome SNV phylogenetic tree and infer the evolutionary relationships of the isolates. In addition, you will annotate the bacterial genomes to detect the presence of various genetic features from this *Salmonella* outbreak dataset.
+In this integrative assignment, you will be applying some of the genomic epidemiology analysis methods covered in this workshop. The focus of the assignment will be on *Salmonella enterica*, an enteric pathogen that primarily spreads by human consumption of contaminated foods in Canada and the United States. Here, you will examine isolates of *Salmonella* serovar Heidelberg from three epidemiologically distinct foodborne outbreaks that occurred in Quebec, Canada between 2012-2014. For more detailed background on how the outbreaks happened, you are encouraged to read over the original publication by [Bekal et al. (2014)](https://pubmed.ncbi.nlm.nih.gov/26582830/). You will be analyzing the whole-genome sequencing (WGS) data generated from the study to investigate these foodborne outbreaks. Briefly, you will identify core genome single nucleotide variants (SNVs) from pre-assembled genomes, construct a core genome SNV phylogenetic tree and infer the evolutionary relationships of the isolates. In addition, you will annotate the bacterial genomes to detect the presence of various genetic features from this *Salmonella* outbreak dataset.
 
 The primary goal here is to integrate evidence from the phylogeny and genome annotations to justify which isolates are most likely epidemiologically linked (belong to the same outbreak).
 
 
 On AWS, you can find the following:
 
-* Assembled genomes of the isolates
+* Assembled *Salmonella* genomes
 ```
 ~/CourseData/IDE_Data/integrated_hw/assemblies
 ```
@@ -71,7 +71,7 @@ Review the summary file and the core genome alignment, and answer the following 
 ___
 ### Phylogenetic analysis & visualization
 
-Here, you are tasked with using FastTree to construct a maximum likelihood tree from the core genome SNV alignment. When visualizing the phylogenetic tree, make note of any clustering patterns and which strains are closely/distantly related.
+Here, you are tasked with using `FastTree` to construct a maximum likelihood tree from the core genome SNV alignment. When visualizing the phylogenetic tree, make note of any clustering patterns and which strains are closely/distantly related.
 
 Hints:
 1. Activate the `augur` conda environment to call `FastTree`
