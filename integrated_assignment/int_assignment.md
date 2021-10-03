@@ -16,14 +16,14 @@ author: Venus Lau & Jimmy Liu
 
 ### Introduction
 
-In this integrative assignment, you will be applying some of the genomic epidemiology analysis methods covered in this workshop. The focus of the assignment will be on Salmonella enterica, an enteric pathogen that primarily spreads by human consumption of contaminated foods in Canada and the United States. Here, you will examine isolates of Salmonella serovar Heidelberg from three epidemiologically distinct foodborne outbreaks that occurred in Quebec, Canada between 2012-2014. For more detailed background on how the outbreaks happened, you are encouraged to read over the original publication by Bekal et al. (2014). You will be analyzing the whole-genome sequencing (WGS) data generated from the study to investigate these foodborne outbreaks. Briefly, you will identify core genome single nucleotide variants (SNVs) from pre-assembled genomes, construct a core genome SNV phylogenetic tree and infer the evolutionary relationships of the isolates. In addition, you will annotate the bacterial genomes to detect the presence of various genetic features from this Salmonella outbreak dataset.
+In this integrative assignment, you will be applying some of the genomic epidemiology analysis methods covered in this workshop. The focus of the assignment will be on *Salmonella enterica*, an enteric pathogen that primarily spreads by human consumption of contaminated foods in Canada and the United States. Here, you will examine isolates of *Salmonella* serovar Heidelberg from three epidemiologically distinct foodborne outbreaks that occurred in Quebec, Canada between 2012-2014. For more detailed background on how the outbreaks happened, you are encouraged to read over the original publication by [Bekal et al. (2014)](https://pubmed.ncbi.nlm.nih.gov/26582830/). You will be analyzing the whole-genome sequencing (WGS) data generated from the study to investigate these foodborne outbreaks. Briefly, you will identify core genome single nucleotide variants (SNVs) from pre-assembled genomes, construct a core genome SNV phylogenetic tree and infer the evolutionary relationships of the isolates. In addition, you will annotate the bacterial genomes to detect the presence of various genetic features from this *Salmonella* outbreak dataset.
 
 The primary goal here is to integrate evidence from the phylogeny and genome annotations to justify which isolates are most likely epidemiologically linked (belong to the same outbreak).
 
 
 On AWS, you can find the following:
 
-* Assembled genomes of the isolates
+* Assembled *Salmonella* genomes
 ```
 ~/CourseData/IDE_Data/integrated_hw/assemblies
 ```
@@ -71,12 +71,12 @@ Review the summary file and the core genome alignment, and answer the following 
 ___
 ### Phylogenetic analysis & visualization
 
-Here, you are tasked with using FastTree to construct a maximum likelihood tree from the core genome SNV alignment. When visualizing the phylogenetic tree, make note of any clustering patterns and which strains are closely/distantly related.
+Here, you are tasked with using `FastTree` to construct a maximum likelihood tree from the core genome SNV alignment. When visualizing the phylogenetic tree, make note of any clustering patterns and which strains are closely/distantly related.
 
 Hints:
-Activate the ‘augur’ conda environment to call FastTree
-Example FastTree usage: FastTree -nt sequence.aln > tree.nwk
-Use the ggtree R package to generate a visualization of the phylogenetic tree
+1. Activate the `augur` conda environment to call `FastTree`
+2. Example `FastTree` usage: `FastTree -nt sequence.aln > tree.nwk`
+3. Use the `ggtree` R package to generate a visualization of the phylogenetic tree
 
 *If you’re running out of time, you can refer to the precomputed tree [here](https://microreact.org/project/uMwV8YcgBGtHEFuMBWqBes/d8f6d8a4). The isolates are coloured by their associated outbreak.
 
@@ -88,35 +88,31 @@ ___
 ### Genome Annotation
 Predicting genes and other functional elements (e.g. transcriptional elements, replication origins, mobile elements) can help explain the differences in biological, epidemiological, and ecological characteristics of microbial organisms. Genome annotations are also critical for risk assessments of infectious disease pathogens, as the detection of multiple antimicrobial resistance (AMR) or virulent genes are suggestive of high risks to public health or patient health that require immediate attention. 
 
-Here, you will use a tool called ABRicate to search for the presence of plasmids, AMR genes and virulence factors (VF). You will need to search against three different nucleotide databases that contain reference sequences of curated MGEs. After you have identified the genetic elements carried by the bacterial genomes, you will generate heatmaps to visualize the results and identify any correlations amongst within-outbreak strains and between-outbreak strains.
+Here, you will use a tool called `ABRicate` to search for the presence of plasmids, AMR genes and virulence factors (VF). You will need to search against three different nucleotide databases that contain reference sequences of curated elements. Once you have identified the genetic elements carried by the bacterial genomes, you will generate heatmaps to visualize the results and identify any correlations amongst within-outbreak strains and between-outbreak strains.
 
-#### How to run ABRicate
-* Activate the ‘abricate’ conda environment
-* Example ABRicate usage: abricate --db db_name contigs.fa > report.tab
-* The main parameter, `--db` specifies which database you would like to search against. There are different databases for different genetic elements and you can find out the list of pre-downloaded sequence databases by executing: abricate --list
+#### How to run `ABRicate`:
+* Activate the `abricate` conda environment
+* Example ABRicate usage: `abricate --db db_name contigs.fa > report.tab`
+* The main parameter, `--db` specifies which database you would like to search against. There are different databases for different genetic elements. You can find the list of pre-downloaded sequence databases by executing: `abricate --list`
 * To search for AMR genes, virulence factors, and plasmids, the database names are `card`, `vfdb`, and `plasmidfinder`, respectively
-* Once you have generated the required ABRicate outputs for all Salmonella genomes, combine the results of all genomes by executing: 
+* Once you have generated the required ABRicate outputs for all *Salmonella* genomes, combine the results of all genomes by executing: 
 ```bash
 abricate --summary /path/to/amr_results_dir/*.tab > amr_summary.tab
 ```
 #### How to visualize ABRicate summary results
-If you feel like challenging yourself with data visualization using R, then feel free to skip the instructions in this section and proceed to write your own codes in RStudio to plot the heatmaps.
-
-To help with results visualization, we have prepared a R script to generate heatmap plots directly from ABRicate summary results:
-
-* Clone the IDE2021_integrated_hw GitHub repository to your current working directory
-```
-git clone https://github.com/jimmyliu1326/IDE2021_integrated_hw
-```
-* Inside the cloned repository, you will find a script called `abricate_heatmap.R`
-* Example usage of the script
+* If you feel like challenging yourself with data visualization using R, then feel free to skip the instructions in this section and proceed to write your own codes in RStudio to plot the heatmaps.
+* To help with results visualization, we have prepared a R script to generate heatmap plots directly from ABRicate summary results:
 ```bash
-Rscript abricate_heatmap.R /path/to/amr_summary.tab /path/to/amr_heatmap.png`
+# Clone the IDE2021_integrated_hw GitHub repository to your current working directory
+git clone https://github.com/jimmyliu1326/IDE2021_integrated_hw
+# Inside the cloned repository, you will find a script called `abricate_heatmap.R`
+# Example usage of the script
+Rscript abricate_heatmap.R /path/to/amr_summary.tab /path/to/amr_heatmap.png
 ```
 
-#### Hints
-*** You can only query one genome against one database at a time (How would you automate the search for multiple genomes?)
-*** For each database (card, vfdb, plasmidfinder), organize the annotation results in a different directory 
+#### Hints:
+1. You can only query one genome against one database at a time (How would you automate the search for multiple genomes?)
+2. For each database (card, vfdb, plasmidfinder), organize the annotation results in a different directory 
 
 > ***Q6: Can you infer which isolates are epidemiologically linked and which isolates are sporadic cases based on the presence/absence of the plasmids?***
 
