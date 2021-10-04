@@ -60,6 +60,11 @@ Please feel free to ask me what modifications I've applied.
 ![Trash panda](https://upload.wikimedia.org/wikipedia/commons/thumb/e/ed/Raccoon_%28Procyon_lotor%29_2.jpg/711px-Raccoon_%28Procyon_lotor%29_2.jpg)
 
 ### Exercise 0 - Setting Up
+Because this is the first lab, you'll need to reset your password for user `ubuntu` to make sure you can log into RStudio Server smoothly. 
+
+```bash
+sudo passwd ubuntu
+```
 
 First, let's copy data into your workspace:
 
