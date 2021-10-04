@@ -5,7 +5,7 @@ title: IDE Module 6 Lab
 header1: Emerging Pathogen Detection and Identification using Metagenomic Samples
 header2: Infectious Disease Genomic Epidemiology
 image: /site_images/CBW_Metagenome_icon.jpg
-home: https://bioinformaticsdotca.github.io/EPI_2021
+home: https://bioinformaticsdotca.github.io/IDE_2021
 description: Emerging Pathogen Detection and Identification using Metagenomic Samples
 author: Aaron Petkau and Gary Van Domselaar
 modified: October 2nd, 2021
