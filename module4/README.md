@@ -92,7 +92,7 @@ The overall goal of this lab is to make use of a set of SARS-CoV-2 genomes seque
 
 An overview of the basic usage of Augur is as follows (figure from the Augur documentation):
 
-![augur_analysis_sketch.png][]
+[![augur_analysis_sketch-small.png][]][augur_analysis_sketch.png]
 
 These steps are as follows (we add in an additional **visualize** step to take a look at some of the output files produced by the Augur pipeline).
 
@@ -245,7 +245,7 @@ What these commands do is:
 
 Once we have the PNG file saved, you should be able to go to <http://YOUR-MACHINE/module4/tree.png> and view the tree alongside the first 100 bp of the alignment. This will be a pretty big drawing but should look something like:
 
-![tree-alignment.png][]
+[![tree-alignment-small.png][]][tree-alignment.png]
 
 On the right you can see the first 100 bp of the alignment (note that many of the beginning bp are gaps `-` or ambiguous bases `N` due to issues with sequencing). On the left you can see the phylogenetic tree. The genome [MN908947](https://www.ncbi.nlm.nih.gov/nuccore/MN908947.3) is the reference genome which is used as a common coordinate system for naming mutations for SARS-CoV-2. We will discuss a bit more in class on how to interpret phylogenetic trees.
 
@@ -337,19 +337,19 @@ To do this, please navigate to <http://YOUR-MACHINE/module4/analysis/> and downl
 
 Next, navigate to <https://auspice.us/> and drag the file `analysis-package.json` onto the page.
 
-![drag-and-drop.png][]
+[![drag-and-drop-small.png][]][drag-and-drop.png]
 
 This should result in a phylogenetic tree being loaded that looks like:
 
-![auspice-main.png][]
+[![auspice-main-small.png][]][auspice-main.png]
 
 Next, we will load the metadata `filtered.tsv` file onto this view. To do this, please find and drag-and-drop the `filtered.tsv` file onto the phylogenetic tree shown in Auspice:
 
-![auspice-drag-metadata.png][]
+[![auspice-drag-metadata-small.png][]][auspice-drag-metadata.png]
 
 You main get some warning messages showing up, but you should still see a green **Added metadata from filtered.tsv** message.
 
-![auspice-metadata-warnings.png][]
+[![auspice-metadata-warnings-small.png][]][auspice-metadata-warnings.png]
 
 ---
 
@@ -357,27 +357,27 @@ You main get some warning messages showing up, but you should still see a green 
 
 Now you can spend some time to explore the data and get used to the Auspice interface. Try switching between different **Tree Layouts**, or different **Branch Lengths**, or colouring the tree by different criteria in the metadata table.
 
-![auspice-panel.png][]
+[![auspice-panel-small.png][]][auspice-panel.png]
 
 ## Step 3: Examine particular clades
 
 We are now going to compare the tree we constructed from the tree in [Figure 4](https://www.nature.com/articles/s41564-020-00838-z/figures/4) of the existing study.
 
-![figure4bc.png][]
+[![figure4bc-small.png][]][figure4bc.png]
 
 As a first step, let's examine the tree from **Figure 4.b** in Auspice. We can do this by searching for one of the genomic samples `Scotland/CVR50` in Auspice:
 
 1. Select genome `Scotland/CVR50` by using the **Filter Data** box:
 
-   ![filter-by.png][]
+   [![filter-by-small.png][]][filter-by.png]
 
 2. Use a combination of **Zoom to Selected** and the zoom out button (magnifying glass) to show the set of genomic samples around `Scotland/CVR50`.
 
-   ![zoom-to-selected.png][]
+   [![zoom-to-selected-small.png][]][zoom-to-selected.png]
 
 3. Select the **Trash icon** for the filter to remove it and select to **Color by** `travel_hx` (Travel history). When you are finished you should see something like below.
 
-   ![selected-subtree.png][]
+   [![selected-subtree-small.png][]][selected-subtree.png]
 
 Compare this tree from that in **Figure 4.b** above. Are there differences? Is **Figure 4.b** a *Divergence* tree or a *Time* tree? Can you spot the two cases associated with travel to Italy in the prior 2 weeks?
 
@@ -389,17 +389,17 @@ Try out the same procedure for the clade from **Figure 4.c** (search for `Scotla
 
 Time trees place the leafs of the tree at the collection date for each collected sample and predicts the dates for internal nodes (representing hypothetical ancestors). We can compare our tree (scaled by time) with [Figure 5](https://www.nature.com/articles/s41564-020-00838-z/figures/5) from the study (an excerpt seen below):
 
-![fig5.png][]
+[![fig5-small.png][]][fig5.png]
 
 This figure shows a time-scaled tree (dates are shown on the x-axis) and uses this information to infer the detection lag (difference between the time of the common ancestor to this clade and the first sequenced sample).
 
 To compare this figure to our tree, we can search for the listed lineage (`UK5098`) and zoom into this clade.
 
-![search-by-lineage.png][]
+[![search-by-lineage-small.png][]][search-by-lineage.png]
 
 To view sample collection dates you can hover over the particular sample:
 
-![view-dates.png][]
+[![view-dates-small.png][]][view-dates.png]
 
 Compare this to our predicted date of the most recent common ancestor to all of `UK5098`. How does this compare to the **Figure 5** above? How closely related are some of these genomes (try toggling between **Time** and **Divergence** for Branch Length)?
 
@@ -421,16 +421,30 @@ You've made it to the end of the lab. Awesome job. If you find you have some ext
 [treetime]: https://treetime.readthedocs.io/en/latest/
 [Auspice]: https://auspice.us/
 [drag-and-drop.png]: images/drag-and-drop.png
+[drag-and-drop-small.png]: images/small/drag-and-drop.png
 [auspice-main.png]: images/auspice-main.png
+[auspice-main-small.png]: images/small/auspice-main.png
 [auspice-drag-metadata.png]: images/auspice-drag-metadata.png
+[auspice-drag-metadata-small.png]: images/small/auspice-drag-metadata.png
 [auspice-metadata-warnings.png]: images/auspice-metadata-warnings.png
+[auspice-metadata-warnings-small.png]: images/small/auspice-metadata-warnings.png
 [auspice-panel.png]: images/auspice-panel.png
+[auspice-panel-small.png]: images/auspice-panel.png
 [figure4bc.png]: images/figure4bc.png
+[figure4bc-small.png]: images/small/figure4bc.png
 [tree-alignment.png]: images/tree-alignment.png
+[tree-alignment-small.png]: images/small/tree-alignment.png
 [augur_analysis_sketch.png]: images/augur_analysis_sketch.png
+[augur_analysis_sketch-small.png]: images/small/augur_analysis_sketch.png
 [filter-by.png]: images/filter-by.png
+[filter-by-small.png]: images/filter-by.png
 [zoom-to-selected.png]: images/zoom-to-selected.png
+[zoom-to-selected-small.png]: images/small/zoom-to-selected.png
 [selected-subtree.png]: images/selected-subtree.png
+[selected-subtree-small.png]: images/small/selected-subtree.png
 [fig5.png]: images/fig5.png
+[fig5-small.png]: images/small/fig5.png
 [search-by-lineage.png]: images/search-by-lineage.png
+[search-by-lineage-small.png]: images/search-by-lineage.png
 [view-dates.png]: images/view-dates.png
+[view-dates-small.png]: images/view-dates.png
