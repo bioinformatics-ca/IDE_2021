@@ -1,7 +1,7 @@
 ---
 layout: tutorial_page
-permalink: /IDE_2021_molecular_typing_lab
-title: Molecular Typing Lab 
+permalink: /IDE_2021_Module3_lab
+title: Module 3 Lab 
 header1: Workshop Pages for Students
 header2: Molecular Typing Lab
 image: /site_images/CBW_wshop-epidem_map-icon.png
