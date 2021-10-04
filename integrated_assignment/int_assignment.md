@@ -1,7 +1,7 @@
 ---
 layout: integrated_assignment
-permalink: /IDE_2021_integrated_assignment
-title: Integrated Assigment
+permalink: /IDE_2021_int_assignment
+title: IDE Integrated Assigment
 header1: Workshop Pages for Students
 header2: Integrated Assigment
 image: /site_images/CBW_wshop-epidem_map-icon.png
