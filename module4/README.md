@@ -22,6 +22,8 @@ modified: September 30, 2021
 <a name="intro"></a>
 # 1. Introduction
 
+* [Introduction Slides][]
+
 In this tutorial we will be performing phylogenetic and phylodynamic analysis of a set of sequenced SARS-CoV-2 genomes and will be using this information to gain insight into the early introduction of SARS-CoV-2 into Scotland beginning around March 2020. The source of this data is available in the below study:
 
 > da Silva Filipe, A., Shepherd, J.G., Williams, T. *et al.* Genomic epidemiology reveals multiple introductions of SARS-CoV-2 from mainland Europe into Scotland. *Nat Microbiol* **6**, 112–122 (2021). https://doi.org/10.1038/s41564-020-00838-z
@@ -84,6 +86,17 @@ You should see the command-prompt (where you type commands) switch to include `(
 ```
 augur 13.0.0
 ```
+
+## 3.3. Find your IP address
+
+Similar to yesterday, we will want to find the IP address of your machine on AWS so we can access some files from your machine on the web browser. To find your IP address please run:
+
+**Commands**
+```bash
+curl http://checkip.amazonaws.com
+```
+
+This should print a number like XX.XX.XX.XX. Once you have your address, try going to <http://IP-ADDRESS> and clicking the link for **module4**. This page will be referred to later to view some of our output files. In addition, the link **precompuated-analysis** will contain all the files we will generate during this lab (phylogenetic trees, etc). 
 
 <a name="build-tree"></a>
 # 4. Building the phylogenetic tree
@@ -181,7 +194,7 @@ Once the alignment is complete, you should have a file `alignment.fasta` in your
 
 ## Step 3: Build a Maximum Liklihood phylogenetic tree (`augur tree`)
 
-The next step is to take the set of aligned genomes `alignment.fasta` and build a phylogenetic tree. We will use `augur tree` for this, but underneath it runs [iqtree][], which uses the Maximim Likihood method to build a phylogenetic tree. To build a tree, please run the following:
+The next step is to take the set of aligned genomes `alignment.fasta` and build a phylogenetic tree (a divergence tree). We will use `augur tree` for this, but underneath it runs [iqtree][], which uses the Maximim Likihood method to build a phylogenetic tree. To build a tree, please run the following:
 
 **Commands**
 ```bash
@@ -243,11 +256,10 @@ What these commands do is:
 2. `export QT_QPA_PLATFORM="offscreen"`: This needs to be set before running `ete3`. This is needed since the machines on AWS don't have a graphical window system (X Server) attached so we need to tell `ete3` that this is expected (e.g., display is `"offscreen"`).
 3. `ete3 view ...`: This draw the phylogenetic tree (`-t tree.subs.nwk`) alongside the alignment (`--alg alignment.100.fasta`) and saves to a a PNG file (`-i tree.png`). *Note: You can save to a PDF file instead by using `-i tree.pdf`.*
 
-Once we have the PNG file saved, you should be able to go to <http://YOUR-MACHINE/module4/tree.png> and view the tree alongside the first 100 bp of the alignment. This will be a pretty big drawing but should look something like:
+Once we have the PNG file saved, you should be able to go to <http://IP-ADDRESS/module4/tree.png> and view the tree alongside the first 100 bp of the alignment. This will be a pretty big drawing but should look something like:
 
 
 <img src="https://github.com/bioinformatics-ca/IDE_2021/blob/main/module4/images/tree-alignment.png?raw=true" alt="p2" width="750" />
-
 
 On the right you can see the first 100 bp of the alignment (note that many of the beginning bp are gaps `-` or ambiguous bases `N` due to issues with sequencing). On the left you can see the phylogenetic tree. The genome [MN908947](https://www.ncbi.nlm.nih.gov/nuccore/MN908947.3) is the reference genome which is used as a common coordinate system for naming mutations for SARS-CoV-2. We will discuss a bit more in class on how to interpret phylogenetic trees.
 
@@ -335,7 +347,7 @@ Now that we've constructed and packaged up a tree (`analysis-package.json`), we 
 
 ## Step 1: Load data into Auspice
 
-To do this, please navigate to <http://YOUR-MACHINE/module4/analysis/> and download the files `analysis-package.json` and `filtered.tsv` to your computer (if the link does not download you can **Right-click** and select **Save link as...**).
+To do this, please navigate to <http://IP-ADDRESS/module4/analysis/> and download the files `analysis-package.json` and `filtered.tsv` to your computer (if the link does not download you can **Right-click** and select **Save link as...**).
 
 Next, navigate to <https://auspice.us/> and drag the file `analysis-package.json` onto the page.
 
@@ -388,9 +400,11 @@ As a first step, let's examine the tree from **Figure 4.b** in Auspice. We can d
 
 <img src="https://github.com/bioinformatics-ca/IDE_2021/blob/main/module4/images/selected-subtree.png?raw=true" alt="p2" width="750" />
 
-Compare this tree from that in **Figure 4.b** above. Are there differences? Is **Figure 4.b** a *Divergence* tree or a *Time* tree? Can you spot the two cases associated with travel to Italy in the prior 2 weeks?
+### Step 3: Questions
 
-Try out the same procedure for the clade from **Figure 4.c** (search for `Scotland/GCVR-17033E`). Does it also look simlar?
+1. Compare this tree from that in **Figure 4.b** above. Are there differences? Is **Figure 4.b** a *Divergence* tree or a *Time* tree?
+2. Can you spot the two cases associated with travel to Italy in the prior 2 weeks?
+3. Try out the same procedure for the clade from **Figure 4.c** (search for `Scotland/GCVR-17033E`). Does it also look simlar to what is shown in **Figure 4**?
 
 ---
 
@@ -410,7 +424,10 @@ To view sample collection dates you can hover over the particular sample:
 
 <img src="https://github.com/bioinformatics-ca/IDE_2021/blob/main/module4/images/view-dates.png?raw=true" alt="p2" width="750" />
 
-Compare this to our predicted date of the most recent common ancestor to all of `UK5098`. How does this compare to the **Figure 5** above? How closely related are some of these genomes (try toggling between **Time** and **Divergence** for Branch Length)?
+### Step 4: Questions
+
+1. Compare this to our predicted date of the most recent common ancestor to all of `UK5098`. How does this compare to the **Figure 5** above?
+2. How closely related are some of these genomes (try toggling between **Time** and **Divergence** for Branch Length)?
 
 *Note: Our data may not look exactly the same as the figure. We used slightly different software and methods from that of the paper.*
 
@@ -457,3 +474,4 @@ You've made it to the end of the lab. Awesome job. If you find you have some ext
 [search-by-lineage-small.png]: images/search-by-lineage.png
 [view-dates.png]: images/view-dates.png
 [view-dates-small.png]: images/view-dates.png
+[Introduction Slides]: https://drive.google.com/file/d/1-OC9TOOlN4DLoWOX0NitipOhFuWsVB9f/view?usp=sharing
