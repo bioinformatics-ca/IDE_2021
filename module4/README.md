@@ -434,6 +434,7 @@ You've made it to the end of the lab. Awesome job. If you find you have some ext
 [figure4bc-small.png]: images/small/figure4bc.png
 [tree-alignment.png]: images/tree-alignment.png
 [augur_analysis_sketch.png]: images/augur_analysis_sketch.png
+[augur_analysis_sketch-small.png]: images/small/augur_analysis_sketch.png
 [filter-by.png]: images/filter-by.png
 [zoom-to-selected.png]: images/zoom-to-selected.png
 [selected-subtree.png]: images/selected-subtree.png
