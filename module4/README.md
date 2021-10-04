@@ -5,7 +5,7 @@ title: IDE Module 4 Lab
 header1: Phylogenetics and Phylodynamics of SARS-CoV-2
 header2: IDE Module 4 Lab
 image: /site_images/CBW_Metagenome_icon.jpg
-home: https://bioinformaticsdotca.github.io/EDI_2021
+home: https://bioinformaticsdotca.github.io/IDE_2021
 description: Phylogenetics and Phylodynamics of SARS-CoV-2
 author: Aaron Petkau, Finlay Maguire, and Rob Beiko
 modified: September 30, 2021
