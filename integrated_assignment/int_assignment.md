@@ -69,7 +69,7 @@ Description of SNV alignment summary headers:
 | VARIANT | Number of variants identified |
 | HET | Number of heterozygous sites (mixed variants) |
 | MASKED | Number of masked sites in reference sequence |
-| LOWCOV | Number of sites in reference sequence with low depth of coverage |
+| LOWCOV | Number of aligned sites with low depth of coverage |
 
 Review the summary file and the core genome alignment, and answer the following questions:
 
