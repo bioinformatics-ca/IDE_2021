@@ -135,7 +135,8 @@ fastp v0.22.0, time used: 34 seconds
 
 You should now be able to nagivate to <http://YOUR-MACHINE/module6_workspace/analysis> and see some of the output files. In particular, you should be able to find **fastp.html**, which contains a report of the quality of the reads and how many were removed. Please take a look at this report now:
 
-![fastp-report][]
+
+<img src="https://github.com/bioinformatics-ca/IDE_2021/blob/main/module6/images/fastp.png?raw=true" alt="p2" width="750" />
 
 This should show an overview of the quality of the reads before and after filtering with `fastp`. Using this report, please anser the following questions.
 
@@ -154,7 +155,7 @@ Command documentation is available [here](http://kat.readthedocs.io/en/latest/us
 
 KAT works by breaking down each read into small fragements of length *k*, k-mers, and comparing them to a k-mer database of the human reference genome. Subsequently, the complete read is either assigned into a matched or unmatched file if 10% of the k-mers in the read have been found in the human database.
 
-![kat-overview][]
+<img src="https://github.com/bioinformatics-ca/IDE_2021/blob/main/module6/images/kat.png?raw=true" alt="p2" width="750" />
 
 Let's run KAT now.
 
@@ -379,7 +380,7 @@ Thank you for using QUAST!
 
 Quast writes it's output to a directory `quast_results/`, which includes HTML and PDF reports. We can view this using a web browser by navigating to <http://[YOUR-MACHINE]/module6_workspace/analysis/quast_results/latest/icarus.html>. From here, click on **Contig size viewer**. You should see the following:
 
-![quast-contigs.png][]
+<img src="https://github.com/bioinformatics-ca/IDE_2021/blob/main/module6/images/quast-contigs.png?raw=true" alt="p2" width="750" />
 
 This shows the length of each contig in the `megahit_out/final.contigs.fa` file, sorted by size.
 
@@ -410,7 +411,9 @@ The next command will run [BLAST][] on these top 50 longest contigs using a pre-
 
 To view these results, please browse to <http://YOUR-MACHINE/module6_workspace/analysis/blast_results.html> to view the ouptut `blast_results.html` file. This should look something like below:
 
-![blast-report.png][]
+
+<img src="https://github.com/bioinformatics-ca/IDE_2021/blob/main/module6/images/blast-report.png?raw=true" alt="p2" width="750" />
+
 
 ### Step 7: Questions
 
