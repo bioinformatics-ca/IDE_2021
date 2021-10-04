@@ -92,7 +92,7 @@ The overall goal of this lab is to make use of a set of SARS-CoV-2 genomes seque
 
 An overview of the basic usage of Augur is as follows (figure from the Augur documentation):
 
-![augur_analysis_sketch.png][]
+[![augur_analysis_sketch-small.png][]][augur_analysis_sketch.png]
 
 These steps are as follows (we add in an additional **visualize** step to take a look at some of the output files produced by the Augur pipeline).
 
@@ -421,11 +421,17 @@ You've made it to the end of the lab. Awesome job. If you find you have some ext
 [treetime]: https://treetime.readthedocs.io/en/latest/
 [Auspice]: https://auspice.us/
 [drag-and-drop.png]: images/drag-and-drop.png
+[drag-and-drop-small.png]: images/small/drag-and-drop.png
 [auspice-main.png]: images/auspice-main.png
+[auspice-main-small.png]: images/small/auspice-main.png
 [auspice-drag-metadata.png]: images/auspice-drag-metadata.png
+[auspice-drag-metadata-small.png]: images/small/auspice-drag-metadata.png
 [auspice-metadata-warnings.png]: images/auspice-metadata-warnings.png
+[auspice-metadata-warnings-small.png]: images/small/auspice-metadata-warnings.png
 [auspice-panel.png]: images/auspice-panel.png
+[auspice-panel-small.png]: images/auspice-panel.png
 [figure4bc.png]: images/figure4bc.png
+[figure4bc-small.png]: images/small/figure4bc.png
 [tree-alignment.png]: images/tree-alignment.png
 [augur_analysis_sketch.png]: images/augur_analysis_sketch.png
 [filter-by.png]: images/filter-by.png
