@@ -1,5 +1,5 @@
 ---
-layout: integrated_assignment
+layout: tutorial_page
 permalink: /IDE_2021_int_assignment
 title: IDE Integrated Assigment
 header1: Workshop Pages for Students
