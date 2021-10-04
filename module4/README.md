@@ -1,11 +1,11 @@
 ---
 layout: tutorial_page
-permalink: /epidemiology_2021_EPD_IMS
-title: Infectious Disease Epidemiology Analysis
+permalink: /IDE_2021_Module4_lab
+title: IDE Module 4 Lab
 header1: Phylogenetics and Phylodynamics of SARS-CoV-2
-header2: Infectious Disease Epidemiology Analysis 2021
+header2: IDE Module 4 Lab
 image: /site_images/CBW_Metagenome_icon.jpg
-home: https://bioinformaticsdotca.github.io/epidemiology_2021
+home: https://bioinformaticsdotca.github.io/EDI_2021
 description: Phylogenetics and Phylodynamics of SARS-CoV-2
 author: Aaron Petkau, Finlay Maguire, and Rob Beiko
 modified: September 30, 2021
