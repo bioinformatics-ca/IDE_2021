@@ -190,6 +190,7 @@ If you open this file (either by downloading it and opening it in a spreadsheet 
 <details>
   <summary>Answer</summary>
 AMR genes found:
+  
 * MCR-1 (Avg coverage: 45.2%)
 * MCR-1.5 (Avg coverage: 54%)
 * MCR-1.11 (Avg coverage: 57.46%)
@@ -217,7 +218,8 @@ Now use `cd ..`, create a new directory, and **try and repeat** this process usi
 
 <details>
   <summary>Answer</summary>
-AMR genes found (coverage %):  
+AMR genes found (coverage %):
+  
 * TEM-126 (29.62%)
 * CTX-M-42 (10.16%)
 * TEM-198 (34.26)
