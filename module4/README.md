@@ -18,6 +18,7 @@ modified: September 30, 2021
 4. [Building a tree](#build-tree)
 5. [Visualizing the tree](#visualize-tree)
 6. [End of Lab](#end)
+7. [Bonus](#bonus)
 
 <a name="intro"></a>
 # 1. Introduction
@@ -56,11 +57,11 @@ cp -r ~/CourseData/IDE_data/module4/ workspace/
 cd ~/workspace/module4
 ```
 
-When you are finished with these steps you should be inside the directory `/home/ubuntu/CourseData/IDE_data/module4`. You can verify this by running the command `pwd`.
+When you are finished with these steps you should be inside the directory `/home/ubuntu/workspace/module4`. You can verify this by running the command `pwd`.
 
 **Output after running `pwd`**
 ```
-/home/ubuntu/CourseData/IDE_data/module4
+/home/ubuntu/workspace/module4
 ```
 
 You should also see a directory `data/` in the current directory which contains all the input data. You can verify this by running `ls data`:
@@ -143,7 +144,49 @@ You should not expect to see any output from this command until it is finished, 
 
 This lets us know that we've reduced our dataset from **1 million** down to **1324** SARS-CoV-2 genomes, which is a much more managable size.
 
-The output files produced are `filtered.fasta` and `filtered.tsv`, which is our reduced sequence data and metadata to be used for later stages.
+The output files produced are `filtered.fasta` and `filtered.tsv`, which is our reduced sequence data and metadata to be used for later stages. We can use `head` to get a sense of what's in these files (`head` prints only the first 10 lines of a file):
+
+**Commands**
+```bash
+head filtered.fasta
+```
+
+**Output**
+```
+>Scotland/CVR1222/2020
+AGATCTGTTCTCTAAACGAACTTTAAAATCTGTGTGGCTGTCACTCGGCTGCATGCTTAG
+TGCACTCACGCAGTATAATTAATAACTAATTACTGTCGTTGACAGGACACGAGTAACTCG
+TCTATCTTCTGCAGGCTGCTTACGGTTTCGTCCGTGTTGCAGCCGATCATCAGCACATCT
+AGGTTTCGTCCGGGTGTGACCGAAAGGTAAGATGGAGAGCCTTGTCCCTGGTTTCAACGA
+GAAAACACACGTCCAACTCAGTTTGCCTGTTTTACAGGTTCGCGACGTGCTCGTACGTGG
+CTTTGGAGACTCCGTGGAGGAGGTCTTATCAGAGGCACGTCAACATCTTAAAGATGGCAC
+TTGTGGCTTAGTAGAAGTTGAAAAAGGCGTTTTGCCTCAACTTGAACAGCCCTATGTGTT
+CATCAAACGTTCGGATGCTCGAACTGCACCTCATGGTCATGTTATGGTTGAGCTGGTAGC
+AGAACTCGAAGGCATTCAGTACGGTCGTAGTGGTGAGACACTTGGTGTCCTTGTCCCTCA
+```
+
+**Commands**
+```bash
+head filtered.tsv | cut -f 1,2 | column -s$'\t' -t
+```
+
+**Output**
+```
+strain                     date
+Scotland/CVR380/2020       2020-03-22
+Scotland/CVR650/2020       2020-03-25
+Scotland/CVR565/2020       2020-03-24
+Scotland/EDB194/2020       2020-03-25
+Scotland/GCVR-1702C8/2020  2020-03-24
+Scotland/GCVR-1709D2/2020  2020-03-25
+Scotland/EDB089/2020       2020-03-21
+Scotland/GCVR-170E97/2020  2020-03-28
+Scotland/EDB193/2020       2020-03-24
+```
+
+For `filtered.fasta` we can see a portion of the sequence data.
+
+For `filtered.tsv`, we only select the first two columns (`cut -f 1,2`) to get just a glimpse of all the metadata in the file. We will use the **strain** and **date** columns later to build a time tree (molecular-clock tree). The command `column -s$'\t' -t` just aligns columns up in our terminal window (using tabs `\t` as the separator).
 
 ---
 
@@ -188,7 +231,7 @@ The meaning of each parameter is as follows:
 * `-o alignment.fasta`: The output alignment, in FASTA format.
 * `--reference-sequence data/reference/MN908947.fasta`: The reference genome (the Wuhan-Hu 1 genome). This will be included in our alignment and `augur align` will, once the alignment is constructed, remove any insertions with respect to this reference genome (useful when identifying and naming specific mutations later on in the augur pipeline).
 
-Once the alignment is complete, you should have a file `alignment.fasta` in your directory. Note that this is a very similar format as the input file `filtered.fasta`, but the difference is that gaps `-` have been inserted into `alignment.fasta` such that every sequence in this file is aligned with each other.
+Once the alignment is complete, you should have a file `alignment.fasta` in your directory. This is a very similar format as the input file `filtered.fasta`, but the difference is that sequences have been aligned (possibly by inserting gaps `-`). This also means that all sequences in `alignment.fasta` should have the same length (whereas sequences in `filtered.fasta`, which is not aligned, may have different lengths).
 
 ---
 
@@ -218,58 +261,48 @@ Building original tree took 39.57634449005127 seconds
 
 This produces as output a `tree.subs.nwk` file, which is the actual phylogenetic tree (in Newick format). You can load this file in a variety of phylogenetic tree viewers (such as <http://phylo.io/>) but we will further refine this file to work with Auspice.
 
-Another output file is `alignment-delim.iqtree.log`, which contains additional information from [iqtree][]. You can take a look at this file to get an idea of what [iqtree][] was doing. As iqtree uses a Maximum Liklihood approach, you will see that it will report the likeihood score of the optimal tree (reported as log-likehoods since likelihood values are very very small for these sorts of data analysis).
+Another output file is `alignment-delim.iqtree.log`, which contains additional information from [iqtree][]. You can take a look at this file to get an idea of what [iqtree][] was doing by using `tail` (prints the last few lines of a file).
+
+**Commands**
+```bash
+tail -n 20 alignment-delim.fasta.log
+```
+
+**Output**
+```
+Optimal log-likelihood: -51335.133
+Rate parameters:  A-C: 0.22548  A-G: 0.93225  A-T: 0.09775  C-G: 0.22911  C-T: 3.62235  G-T: 1.00000
+Base frequencies:  A: 0.299  C: 0.184  G: 0.196  T: 0.321
+Parameters optimization took 1 rounds (0.932 sec)
+BEST SCORE FOUND : -51335.133
+Total tree length: 0.034
+
+Total number of iterations: 2
+CPU time used for tree search: 41.833 sec (0h:0m:41s)
+Wall-clock time used for tree search: 10.602 sec (0h:0m:10s)
+Total CPU time used: 132.202 sec (0h:2m:12s)
+Total wall-clock time used: 35.790 sec (0h:0m:35s)
+
+Analysis results written to:
+  IQ-TREE report:                alignment-delim.fasta.iqtree
+  Maximum-likelihood tree:       alignment-delim.fasta.treefile
+  Likelihood distances:          alignment-delim.fasta.mldist
+  Screen log file:               alignment-delim.fasta.log
+
+Date and Time: Mon Oct  4 23:23:55 2021
+```
+
+As iqtree uses a Maximum Liklihood approach, you will see that it will report the likeihood score of the optimal tree (reported as log-likehoods since likelihood values are very very small).
 
 *Note: For this lab we are not looking at branch support values for a tree, but for real-world analysis you may wish to look into including bootstrap support values or approximate likelihood ratio test values. This will give a measure of how well supported each branch in the tree is by the alignment (often as number from 0 for little support to 100 for maximal support). Please see the [IQTree documentation](http://www.iqtree.org/doc/Tutorial#assessing-branch-supports-with-ultrafast-bootstrap-approximation) for more details.*
 
 ---
 
-## Step 4: Visualize tree alongside the alignment
-
-We will now spend some time to take a look at the phylogenetic tree we have constructed using [iqtree][] alongside the input multiple sequence alignment used to construct the tree. We will be using the [ETEToolkit][] to visualize the tree alongside the alignment. However, the full alignment is quite long, so we will use the [BuddySuite][] set of tools to select only a portion of the alignment to view. To do this please run the following:
-
-**Commands**
-```bash
-# Time: 20 seconds
-alignbuddy alignment.fasta -er "0:100" > alignment.100.fasta
-
-# Time: 10 seconds
-export QT_QPA_PLATFORM="offscreen"
-ete3 view -m r -t tree.subs.nwk -i tree.png --alg alignment.100.fasta --alg_type fullseq --alg_format fasta
-```
-
-As output you should expect to see:
-
-**Output**
-```
-/usr/local/conda/envs/augur/lib/python3.8/site-packages/ete3-3.1.2-py3.7.egg/ete3/evol/parser/codemlparser.py:221: SyntaxWarning: "is" with a literal. Did you mean
-"=="?
-/usr/local/conda/envs/augur/lib/python3.8/site-packages/ete3-3.1.2-py3.7.egg/ete3/evol/parser/codemlparser.py:221: SyntaxWarning: "is" with a literal. Did you mean
-"=="?
-```
-
-*Note: `alignbuddy` produces no output and the warnings produced by `ete3` can be ignored.*
-
-What these commands do is:
-
-1. `alignbuddy alignment.fasta -er "0:100" > alignment.100.fasta`: This extracts the first 100 bp from our multiple sequence alignment and saves to a file **alignment.100.fasta**.
-2. `export QT_QPA_PLATFORM="offscreen"`: This needs to be set before running `ete3`. This is needed since the machines on AWS don't have a graphical window system (X Server) attached so we need to tell `ete3` that this is expected (e.g., display is `"offscreen"`).
-3. `ete3 view ...`: This draw the phylogenetic tree (`-t tree.subs.nwk`) alongside the alignment (`--alg alignment.100.fasta`) and saves to a a PNG file (`-i tree.png`). *Note: You can save to a PDF file instead by using `-i tree.pdf`.*
-
-Once we have the PNG file saved, you should be able to go to <http://IP-ADDRESS/module4/tree.png> and view the tree alongside the first 100 bp of the alignment. This will be a pretty big drawing but should look something like:
-
-
-<img src="https://github.com/bioinformatics-ca/IDE_2021/blob/main/module4/images/tree-alignment.png?raw=true" alt="p2" width="750" />
-
-On the right you can see the first 100 bp of the alignment (note that many of the beginning bp are gaps `-` or ambiguous bases `N` due to issues with sequencing). On the left you can see the phylogenetic tree. The genome [MN908947](https://www.ncbi.nlm.nih.gov/nuccore/MN908947.3) is the reference genome which is used as a common coordinate system for naming mutations for SARS-CoV-2. We will discuss a bit more in class on how to interpret phylogenetic trees.
-
----
-
-## Step 5: Building a TimeTree (`augur refine`)
+## Step 4: Building a time tree or molecular-clock tree (`augur refine`)
 
 The tree output by [iqtree][] shows hypothetical evolutionary relationships between different SARS-CoV-2 genomes with branch lengths representing distances between different genomes (in units of **substitutions/site** or the predicted number of substitutions between genomes divided by the alignment length). However, other methods of measuring distance between genomes are possible. In particular we can incorporate the collection dates of the different SARS-CoV-2 genomes to infer a tree where branches are scaled according to the elapsed time. Such trees are called **time trees**.
 
-We will use [TreeTime][] to infer a **time tree** from our phylogenetic tree using collection dates of the SARS-CoV-2 genomes stored in the `filtered.csv` metadata file. We will use the `augur refine` step to run TreeTime and perform some additional refinemint of the tree. To do this, please run the following:
+We will use [TreeTime][] to infer a **time tree** from our phylogenetic tree using collection dates of the SARS-CoV-2 genomes stored in the `filtered.tsv` metadata file. We will use the `augur refine` step to run TreeTime and perform some additional refinemint of the tree. To do this, please run the following:
 
 **Commands**
 ```bash
@@ -308,11 +341,11 @@ The parameters we used are:
 * `--output-tree tree.time.nwk`: The output Newick file containing the time tree.
 * `--output-node-data refine.node.json`: Augur will store additional information here which will let us convert between time trees and substitution trees.
 
-As output, the file `tree.time.nwk` will contain the time tree while the file `refine.node.json` contains additional information about the tree.
+As output, the file `tree.time.nwk` will contain the time tree while the file `refine.node.json` contains additional information about the tree. The tree `tree.time.nwk` will also be rooted based on analysis performed by [TreeTime][].
 
 ---
 
-## Step 6: Package up data for Auspice (`augur export`)
+## Step 5: Package up data for Auspice (`augur export`)
 
 We will be using [Auspice][] to visualize the tree alongside our metadata. To do this, we need to package up all of the data we have so far into a special file which can be used by Auspice. To do this, please run the following command:
 
@@ -390,21 +423,21 @@ As a first step, let's examine the tree from **Figure 4.b** in Auspice. We can d
 
 1. Select genome `Scotland/CVR50` by using the **Filter Data** box:
 
-<img src="https://github.com/bioinformatics-ca/IDE_2021/blob/main/module4/images/filter-by.png?raw=true" alt="p2" width="750" />
+   <img src="https://github.com/bioinformatics-ca/IDE_2021/blob/main/module4/images/filter-by.png?raw=true" alt="p2" width="750" />
 
 2. Use a combination of **Zoom to Selected** and the zoom out button (magnifying glass) to show the set of genomic samples around `Scotland/CVR50`.
 
-<img src="https://github.com/bioinformatics-ca/IDE_2021/blob/main/module4/images/zoom-to-selected.png?raw=true" alt="p2" width="750" />
+   <img src="https://github.com/bioinformatics-ca/IDE_2021/blob/main/module4/images/zoom-to-selected.png?raw=true" alt="p2" width="750" />
 
 3. Select the **Trash icon** for the filter to remove it and select to **Color by** `travel_hx` (Travel history). When you are finished you should see something like below.
 
-<img src="https://github.com/bioinformatics-ca/IDE_2021/blob/main/module4/images/selected-subtree.png?raw=true" alt="p2" width="750" />
+   <img src="https://github.com/bioinformatics-ca/IDE_2021/blob/main/module4/images/selected-subtree.png?raw=true" alt="p2" width="750" />
 
 ### Step 3: Questions
 
 1. Compare this tree from that in **Figure 4.b** above. Are there differences? Is **Figure 4.b** a *Divergence* tree or a *Time* tree?
 2. Can you spot the two cases associated with travel to Italy in the prior 2 weeks?
-3. Try out the same procedure for the clade from **Figure 4.c** (search for `Scotland/GCVR-17033E`). Does it also look simlar to what is shown in **Figure 4**?
+3. Try out the same procedure for the clade from **Figure 4.c** (search for `Scotland/GCVR-17033E`, you may need to click **Reset Layout** first). Does it also look simlar to what is shown in **Figure 4**?
 
 ---
 
@@ -426,8 +459,8 @@ To view sample collection dates you can hover over the particular sample:
 
 ### Step 4: Questions
 
-1. Compare this to our predicted date of the most recent common ancestor to all of `UK5098`. How does this compare to the **Figure 5** above?
-2. How closely related are some of these genomes (try toggling between **Time** and **Divergence** for Branch Length)?
+1. How closely related are some of these genomes in `UK5098` (try toggling between **Time** and **Divergence** for Branch Length)? 
+2. Compare the earliest sample you can find in `UK5098` to the predicted date of the most recent common ancestor to all of `UK5098` (hover over the branch to get the date). How does this compare to the **Figure 5** above?
 
 *Note: Our data may not look exactly the same as the figure. We used slightly different software and methods from that of the paper.*
 
@@ -437,6 +470,51 @@ To view sample collection dates you can hover over the particular sample:
 # 6. End of lab
 
 You've made it to the end of the lab. Awesome job. If you find you have some extra time, you can explore the data in Auspice further and perhaps compare the tree we have generated to the figures from the study ([Figure 4](https://www.nature.com/articles/s41564-020-00838-z/figures/4) or [Figure 5](https://www.nature.com/articles/s41564-020-00838-z/figures/5)).
+
+<a name="bonus"></a>
+# 7. Bonus: Visualize tree alongside the alignment
+
+If you have the time, one additional exercise is to look at the phylogenetic tree we have constructed using [iqtree][] alongside the input multiple sequence alignment used to construct the tree. We will be using the [ETEToolkit][] to visualize the tree alongside the alignment. However, the full alignment is quite long, so we will use the [BuddySuite][] set of tools to select only a portion of the alignment to view. To do this please run the following:
+
+**Commands**
+```bash
+# Make sure you are in the ~/workspace/module4 directory
+cd ~/workspace/module4
+
+# Time: 20 seconds
+alignbuddy alignment.fasta -er "0:100" > alignment.100.fasta
+
+# Time: 10 seconds
+export QT_QPA_PLATFORM="offscreen"
+ete3 view -m r -t tree.subs.nwk -i tree.png --alg alignment.100.fasta --alg_type fullseq --alg_format fasta
+```
+
+As output you should expect to see (warnings can be ignored here):
+
+**Output**
+```
+/usr/local/conda/envs/augur/lib/python3.8/site-packages/ete3-3.1.2-py3.7.egg/ete3/evol/parser/codemlparser.py:221: SyntaxWarning: "is" with a literal. Did you mean
+"=="?
+/usr/local/conda/envs/augur/lib/python3.8/site-packages/ete3-3.1.2-py3.7.egg/ete3/evol/parser/codemlparser.py:221: SyntaxWarning: "is" with a literal. Did you mean
+"=="?
+```
+
+*Note: `alignbuddy` produces no output and the warnings produced by `ete3` can be ignored.*
+
+What these commands do is:
+
+1. `alignbuddy alignment.fasta -er "0:100" > alignment.100.fasta`: This extracts the first 100 bp from our multiple sequence alignment and saves to a file **alignment.100.fasta**.
+2. `export QT_QPA_PLATFORM="offscreen"`: This needs to be set before running `ete3`. This is needed since the machines on AWS don't have a graphical window system (X Server) attached so we need to tell `ete3` that this is expected (e.g., display is `"offscreen"`).
+3. `ete3 view ...`: This draw the phylogenetic tree (`-t tree.subs.nwk`) alongside the alignment (`--alg alignment.100.fasta`) and saves to a a PNG file (`-i tree.png`). *Note: You can save to a PDF file instead by using `-i tree.pdf`.*
+
+Once we have the PNG file saved, you should be able to go to <http://IP-ADDRESS/module4/tree.png> and view the tree alongside the first 100 bp of the alignment. This will be a pretty big drawing but should look something like:
+
+
+<img src="https://github.com/bioinformatics-ca/IDE_2021/blob/main/module4/images/tree-alignment.png?raw=true" alt="p2" width="750" />
+
+On the right you can see the first 100 bp of the alignment (note that many of the beginning bp are gaps `-` or ambiguous bases `N` due to issues with sequencing). On the left you can see the phylogenetic tree. The genome [MN908947](https://www.ncbi.nlm.nih.gov/nuccore/MN908947.3) is the reference genome which is used as a common coordinate system for naming mutations for SARS-CoV-2.
+
+---
 
 
 [Augur]: https://docs.nextstrain.org/projects/augur/en/stable/index.html
