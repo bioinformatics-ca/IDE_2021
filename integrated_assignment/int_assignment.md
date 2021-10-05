@@ -21,21 +21,27 @@ In this integrative assignment, you will be applying some of the genomic epidemi
 The primary goal here is to integrate evidence from the phylogeny and genome annotations to justify which isolates are most likely epidemiologically linked (belong to the same outbreak).
 
 
-On AWS, you can find the following:
+First, copy the assignment directory to your workspace on AWS:
+```
+cp -r ~/CourseData/IDE_data/integrated_hw/ ~/workspace/
+cd ~/workspace/integrated_hw
+```
+
+You can find the following:
 
 * Assembled *Salmonella* genomes
 ```
-~/CourseData/IDE_Data/integrated_hw/assemblies
+~/workspace/integrated_hw/assemblies
 ```
 
 * Reference sequence (Heidelberg str. SL476) for variant calling:
 ```
-~/CourseData/IDE_Data/integrated_hw/reference
+~/workspace/integrated_hw/reference
 ```
 
 * Metadata file
 ```
-~/CourseData/IDE_data/integrated_hw/metadata.csv
+~/workspace/integrated_hw/metadata.csv
 ```
 
 ### Required tools
@@ -51,12 +57,12 @@ To minimize the analysis runtime required, the SNV calling step using Snippy has
 
 SNV and alignment summary is located at:
 ```
-~/CourseData/IDE_Data/integrated_hw/alignment/core_aln_stats.txt
+~/workspace/integrated_hw/alignment/core_aln_stats.txt
 ```
 
 Core genome alignment of the entire dataset is located at:
 ```
-~/CourseData/IDE_Data/integrated_hw/alignment/heidelberg_core.aln
+~/workspace/integrated_hw/alignment/heidelberg_core.aln
 ```
 
 Description of SNV alignment summary headers:
@@ -86,7 +92,7 @@ Here, you are tasked with using `FastTree` to construct a maximum likelihood tre
 
 Hints:
 1. Activate the `augur` conda environment to call `FastTree`
-2. Example `FastTree` usage: `FastTree -nt sequence.aln > tree.nwk`
+2. Example `FastTree` usage: `FastTree -nt sequence.aln > tree.nwk`. You'll need to replace `sequence.aln` with the path to the correct alignment file
 3. Use the `ggtree` R package to generate a visualization of the phylogenetic tree
 
 *If you’re running out of time, you can refer to the precomputed tree [here](https://microreact.org/project/uMwV8YcgBGtHEFuMBWqBes/d8f6d8a4). The isolates are coloured by their associated outbreak.
