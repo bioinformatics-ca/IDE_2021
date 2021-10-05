@@ -218,7 +218,7 @@ Now use `cd ..`, create a new directory, and **try and repeat** this process usi
 
 <details>
   <summary>Answer</summary>
-AMR genes found (coverage %):
+Sample of some of the AMR genes found (coverage %):
   
 * TEM-126 (29.62%)
 * CTX-M-42 (10.16%)
@@ -230,7 +230,9 @@ AMR genes found (coverage %):
 * TEM-214 (32.06%)
 * TEM-33 (36.82%)
 * CTX-M-69 (62,67%)
-  ...
+
+Highest coverage:
+
 * sul2 (100%)
 * APH(6)-Id (100%)
 * dfrA14 (100%)
@@ -260,7 +262,7 @@ Therefore, we are still going to keep using our small plasmid datasets.
 Let's get back to our workfolder and create a result folder for this part of the exercise
 
 ```bash
-cd ..
+cd ../..
 mkdir rgi_assembly_results 
 cd rgi_assembly_results 
 ```
@@ -284,12 +286,41 @@ The output file we are interested in will be called `unknown_plasmid_1_contig_rg
 * What AMR genes have been detected?
 * How does this compare with the results from RGI-bwt? Is this the same gene that had the most coverage in RGI-bwt?
 * Can you use these results with the CARD website to tell me what antibiotics this organism is most likely to be resistant to?
-* Using the website can you tell what species this is gene is common in proportionally?
+* Using the website can you tell what species this gene is common in proportionally?
+
+<details>
+  <summary>Answer</summary>
+
+AMR gene found (best hit): MCR-1.2
+
+Significantly smaller list of AMR genes found. Only one gene found, Perfect hit (sequence identity = 100%). Matches the same gene that had the most ccverage in RGI-bwt.
+
+From the CARD website, most likely to be resistant tc antibiotics in the peptide antibiotic drug class. Examples include colistin A and colistin B. 
+
+       
+ </details>
 
 Repeat this process of assembling and running RGI on the contigs using reads from `unknown_plasmid_2` (`~/CourseData/IDE_data/module5/reads/unknown_plasmid_2`). 
 
 * How do these genes compared to the read results from RGI-bwt for plasmid 2? 
-* Download the `.json` file produced by this second run (e.g., `uknown_plasmid_2_contig_rgi.json` dependening on the `--output_file` option you used) and upload it to analyze json option at the bottom of this [page](https://card.mcmaster.ca/analyze/rgi) **Note: this was broken yesterday so we may have to skip** 
+* Download the `.json` file produced by this second run (e.g., `unknown_plasmid_2_contig_rgi.json` dependening on the `--output_file` option you used) and upload it to analyze json option at the bottom of this [page](https://card.mcmaster.ca/analyze/rgi) **(Note: this was broken yesterday so we may have to skip)** 
+
+<details>
+  <summary>Answer</summary>
+
+AMR genes found:
+
+* MCR-1.1 (Perfect hit)
+* CTX-M-55 (Perfect)
+* TEM-1 (Perfect_
+* APH(6)-Id (Strict hit) (detected as 100% coverage in RGI=bwt)
+* APH(3'')-Ib (Strict) (detected as 100% coverage in RGI-bwt)
+* sul2 (Strict) (detected as 100% coverage in RGI-bwt)
+* tet(A) (Strict)
+* dfrA14 (Perfect) (detected as 100% coverage in RGI-bwt)
+
+       
+ </details>
 
 These are only small datasets, we are going to try and run this on a few real genomes later on so remember the commands!
 
@@ -306,28 +337,34 @@ So let's try it.
 First activate the environment:
 
 ```bash
+cd ..
 conda activate hamronization
 ```
 
 Then we want to convert the outputs from RGI into this hAMRonized format compatible with every other tool.
 
 ```bash
-hamronize rgi unknown_plasmid_contig_rgi.txt --analysis_software_version 5.2.0 --reference_database_version 3.1.3  --input_file_name unknown_plasmid --output unknown_plasmid_contig_hamronize.tsv
-hamronize rgi unknown_plasmid_rgi_bwt.gene_mapping_data.txt --analysis_software_version 5.2.0 --reference_database_version 3.1.3  --input_file_name unknown_plasmid --output unknown_plasmid_reads_hamronize.tsv
+# unknown_plasmid_1
+hamronize rgi rgi_assembly_results/unknown_plasmid_1_contig_rgi.txt --analysis_software_version 5.2.0 --reference_database_version 3.1.3  --input_file_name unknown_plasmid_1 --output unknown_plasmid_1_contig_hamronize.tsv
+hamronize rgi rgi_bwt_results/unknown_plasmid_1/unknown_plasmid_1_read_rgi.gene_mapping_data.txt --analysis_software_version 5.2.0 --reference_database_version 3.1.3  --input_file_name unknown_plasmid_1 --output unknown_plasmid_1_reads_hamronize.tsv
+
+# unknown_plasmid_2
+hamronize rgi rgi_assembly_results/unknown_plasmid_2_contig_rgi.txt --analysis_software_version 5.2.0 --reference_database_version 3.1.3  --input_file_name unknown_plasmid_2 --output unknown_plasmid_2_contig_hamronize.tsv
+hamronize rgi rgi_bwt_results/unknown_plasmid_2/unknown_plasmid_2_read_rgi.gene_mapping_data.txt --analysis_software_version 5.2.0 --reference_database_version 3.1.3  --input_file_name unknown_plasmid_2 --output unknown_plasmid_2_reads_hamronize.tsv
 ```
 
 Finally, we want to create a summary of these hAMRonized results:
 
 
 ```bash
-hamronize summarize --summary_type interactive --output unknown_plasmid_comparison.html unknown_plasmid_contig_hamronize.tsv unknown_plasmid_reads_hamronize.tsv
+# unknown_plasmid_1
+hamronize summarize --summary_type interactive --output unknown_plasmid_1_comparison.html unknown_plasmid_1_contig_hamronize.tsv unknown_plasmid_1_reads_hamronize.tsv
+
+# unknown_plasmid_2
+hamronize summarize --summary_type interactive --output unknown_plasmid_2_comparison.html unknown_plasmid_2_contig_hamronize.tsv unknown_plasmid_2_reads_hamronize.tsv
 ```
 
-You can then download the `unknown_plasmid_comparison.html` and open it in your browser to see an interactive comparison of your results.
-
-Repeat this `hamronize` process for the RGI-bwt and RGI results for `plasmid_2`.
-
-Run `hamronize summarize --summary_type interactive` on all 4 hamronized output files.
+You can then download the `unknown_plasmid_1_comparison.html` and `unknown_plasmid_2_comparison.html` files and open it in your browser to see an interactive comparison of your results.
 
 Download the new interactive summary and compare the results for the two plasmids in contig and bwt modes:
 
@@ -373,6 +410,7 @@ Start by creating another directory to store RGI results from contigs within you
 ```bash
 mkdir rgi_results
 cd rgi_results
+conda activate amr
 ```
 
 Review the parameters needed to run `rgi main`:
@@ -414,10 +452,10 @@ We will generate a few heatmaps across the 3 species categorizing AMR gene famil
 
 ```bash
 rgi heatmap –h
-rgi heatmap -i ~/CourseData/IDE_data/module5/rgi_results -cat gene_family -o genefamily_samples -clus samples
-rgi heatmap -i ~/CourseData/IDE_data/module5/rgi_results -cat drug_class -o drugclass_samples -clus samples
-rgi heatmap -i ~/CourseData/IDE_data/module5/rgi_results -o cluster_both -clus both
-rgi heatmap -i ~/CourseData/IDE_data/module5/rgi_results -o cluster_both_frequency -f -clus bothls
+rgi heatmap -i ~/workspace/module5/rgi_results -cat gene_family -o genefamily_samples -clus samples
+rgi heatmap -i ~/workspace/module5/rgi_results -cat drug_class -o drugclass_samples -clus samples
+rgi heatmap -i ~/workspace/module5/rgi_results -o cluster_both -clus both
+rgi heatmap -i ~/workspace/module5/rgi_results -o cluster_both_frequency -f -clus both
 ```
 
 Note for each heatmap, the following:
@@ -426,7 +464,17 @@ Note for each heatmap, the following:
 * Purple represents no hit
 
 Download the `.png` files generated and refer to your answers to the previous set of questions:
-* At a glance, can you identify AMR gene classes that are found in all three species?
+* At a glance, can you identify AMR gene families that are found in all three species?
+
+<details>
+  <summary>Answer </summary>
+
+No AMR gene families seem to be shared between all three species; however, there are some shared between two:
+
+* adeF and rsmA genes are shared between _Pseudomonas_ and _Salmonella_ which are part of the resistance-nodulation-cell division (RND) antibiotic efflux pump AMR gene family
+
+    
+</details>
 
 Now of course, we only looked at a single sample from each species, so now we will analyse 
 Using pre-compiled RGI results, we can create heatmaps to analyse resistance within a single species using _Neisseria gonorrhoeae_ as an example:
@@ -435,7 +483,7 @@ Using pre-compiled RGI results, we can create heatmaps to analyse resistance wit
 rgi heatmap -i ~/CourseData/IDE_data/module5/precompiled_rgi/neisseria -cat gene_family -o genefamily_neisseria -clus samples
 rgi heatmap -i ~/CourseData/IDE_data/module5/precompiled_rgi/neisseria -cat drug_class -o drugclass_neisserias -clus samples
 rgi heatmap -i ~/CourseData/IDE_data/module5/precompiled_rgi/neisseria  -o cluster_both_neisseria -clus both
-rgi heatmap -i ~/CourseData/IDE_data/module5/precompiled_rgi/neisseria  -o cluster_both_frequency_neisseria -f -clus bothls
+rgi heatmap -i ~/CourseData/IDE_data/module5/precompiled_rgi/neisseria  -o cluster_both_frequency_neisseria -f -clus both
 ```
 
 Feel free to re-run the above adjusting for _Pseudomonas aeruginosa_ and/or _Salmonella enterica_!
@@ -446,10 +494,18 @@ Lastly, we can create a heatmap summarizing the resistance profiles for all 33 p
 rgi heatmap -i ~/CourseData/IDE_data/module5/precompiled_rgi/all -cat gene_family -o genefamily_all_samples -clus samples
 rgi heatmap -i ~/CourseData/IDE_data/module5/precompiled_rgi/all -cat drug_class -o drugclass_all_samples -clus samples
 rgi heatmap -i ~/CourseData/IDE_data/module5/precompiled_rgi/all  -o cluster_both_all_samples -clus both
-rgi heatmap -i ~/CourseData/IDE_data/module5/precompiled_rgi/all  -o cluster_both_frequency_all_samples -f -clus bothls
+rgi heatmap -i ~/CourseData/IDE_data/module5/precompiled_rgi/all  -o cluster_both_frequency_all_samples -f -clus both
 ```
 
 * Which species may be resistant to the most types of antibiotics?
+
+<details>
+  <summary>Answer </summary>
+
+_Pseudomonas_  - not only with many strict hits but perfect hits to genes conferring resistance to a number of antibiotics relative to _Salmonella_ or _Neisseria_
+
+    
+</details>
 
 ## Relax
 
