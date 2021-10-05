@@ -14,7 +14,7 @@
 
 By the end of this practical you will be able to:
 
-* Use the Comprehensive Antibiotic Resistance Database ([CARD](http://card.mcmaster.ca)] to find information about AMR genes using the Antibiotic Resistance Ontology (ARO).
+* Use the Comprehensive Antibiotic Resistance Database ([CARD](http://card.mcmaster.ca)) to find information about AMR genes using the Antibiotic Resistance Ontology (ARO).
 
 * Identify AMR genes in unassembled bacterial reads using the Resistance Gene Identifier's (RGI) read-mapping mode
 
@@ -87,7 +87,7 @@ In this part of the tutorial, your instructor will walk you through the followin
  </details>
 
 
-<a name="#rgibwt"></a>
+<a name="rgibwt"></a>
 ## AMR Detection from Unassembled Reads
 
 The diversity of antimicrobial resistance mechanisms requires a diversity of detection algorithms and a diversity of detection limits. CARD’s Resistance Gene Identifier (RGI) currently integrates four CARD detection models: **Protein Homolog Model**, **Protein Variant Model**, **rRNA Variant Model**, and **Protein Overexpression Model**. Unlike naïve analyses, CARD detection models use hand-curated cut-offs, currently based on BLAST/DIAMOND bitscore cut-offs. Note: many tools won't detect mutation related AMR at all so be careful when picking tool if this is important to you.
@@ -160,11 +160,11 @@ We are going to start by picking just a small set of reads derived from an unkno
 While RGI-BWT is pretty fast it would still take a while to run a full set of genomic (or metagenomic reads)!
 
 ```bash
-cd ~/workspace
-mkdir module5
-cd module5
 mkdir rgi_bwt_results
 cd rgi_bwt_results
+
+mkdir unknown_plasmid_1
+cd unknown_plasmid_1
 ```
 
 Take a look at some of the parameters needed to run `rgi bwt`:
@@ -182,12 +182,32 @@ RGI bwt is still in beta and produces a LOT of output files.
 
 However, the file we are most interested in for now is `unknown_plasmid_1_read_rgi.gene_mapping_data.txt`
 
-If you open this file (either by downloading it and opening it in a spreadsheet program) you can see AMR genes that have been identified in these reads.
+If you open this file (either by downloading it and opening it in a spreadsheet program or by viewing it a text editor such as `nano unknown_plasmid_1_read_rgi.gene_mapping_data.txt`, you can see AMR genes that have been identified in these reads. 
 
 * Which AMR genes were found?
 * Which AMR gene had the highest % coverage? Remember this for later
 
-Now **try and repeat** this process using reads from `unknown_plasmid_2` (`~/CourseData/IDE_data/module5/reads/unknown_plasmid_2`)
+<details>
+  <summary>Answer</summary>
+AMR genes found:
+* MCR-1 (Avg coverage: 45.2%)
+* MCR-1.5 (Avg coverage: 54%)
+* MCR-1.11 (Avg coverage: 57.46%)
+* MCR-1.7 (Avg coverage: 37.7%)
+* MCR-1.12 (Avg coverage: 80.57%)
+* MCR-1.8 (Avg coverage: 36.47%)
+* MCR-1.13 (Avg coverage: 69.13%)
+* MCR-1.2 (Avg coverage: 86.35%) (highest coverage)
+* MCR-1.9 (Avg coverage: 51.29%)
+* MCR-1.6 (Avg coverage: 42.68%)
+* MCR-1.3 (Avg coverage: 72.57%)
+* MCR-1.4 (Avg coverage: 39.42%)
+                
+ </details>
+
+Note: if viewing in `nano`, use `Ctrl+X` to exit, and pressing the `N` key if asked to save changes. 
+
+Now use `cd ..`, create a new directory, and **try and repeat** this process using reads from `unknown_plasmid_2` (`~/CourseData/IDE_data/module5/reads/unknown_plasmid_2`)
 
 * Which AMR genes were found in plasmid 2?
 * Which AMR gene had the highest % coverage? Remember this for later
@@ -197,6 +217,25 @@ Now **try and repeat** this process using reads from `unknown_plasmid_2` (`~/Cou
 
 <details>
   <summary>Answer</summary>
+AMR genes found (coverage %):  
+* TEM-126 (29.62%)
+* CTX-M-42 (10.16%)
+* TEM-198 (34.26)
+* CTX-M-88 (20.55%)
+* TEM-207 (35.42%)
+* CTX-M-101 (28.08%)
+* TEM-122 (32.17%)
+* TEM-214 (32.06%)
+* TEM-33 (36.82%)
+* CTX-M-69 (62,67%)
+  ...
+* sul2 (100%)
+* APH(6)-Id (100%)
+* dfrA14 (100%)
+* APH(3'')-Ib (100%)
+
+Total: 70 AMR genes found
+  
 Read-based analyses advantages and disadvantages: 
 
 * Higher sensitivity (we find as many AMR genes as possible)
@@ -204,7 +243,6 @@ Read-based analyses advantages and disadvantages:
 * Incomplete data (we are likely to find fragments of genes instead of whole genes, this can lead to confusion between similar genes)
 * No genomic context (we don't know where a gene we detect comes from in the genome, is it associated with a plasmid?)
        
-                
  </details>
 
 <a name="rgi"></a>
