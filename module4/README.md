@@ -18,6 +18,7 @@ modified: September 30, 2021
 4. [Building a tree](#build-tree)
 5. [Visualizing the tree](#visualize-tree)
 6. [End of Lab](#end)
+7. [Bonus](#bonus)
 
 <a name="intro"></a>
 # 1. Introduction
@@ -224,48 +225,7 @@ Another output file is `alignment-delim.iqtree.log`, which contains additional i
 
 ---
 
-## Step 4: Visualize tree alongside the alignment
-
-We will now spend some time to take a look at the phylogenetic tree we have constructed using [iqtree][] alongside the input multiple sequence alignment used to construct the tree. We will be using the [ETEToolkit][] to visualize the tree alongside the alignment. However, the full alignment is quite long, so we will use the [BuddySuite][] set of tools to select only a portion of the alignment to view. To do this please run the following:
-
-**Commands**
-```bash
-# Time: 20 seconds
-alignbuddy alignment.fasta -er "0:100" > alignment.100.fasta
-
-# Time: 10 seconds
-export QT_QPA_PLATFORM="offscreen"
-ete3 view -m r -t tree.subs.nwk -i tree.png --alg alignment.100.fasta --alg_type fullseq --alg_format fasta
-```
-
-As output you should expect to see:
-
-**Output**
-```
-/usr/local/conda/envs/augur/lib/python3.8/site-packages/ete3-3.1.2-py3.7.egg/ete3/evol/parser/codemlparser.py:221: SyntaxWarning: "is" with a literal. Did you mean
-"=="?
-/usr/local/conda/envs/augur/lib/python3.8/site-packages/ete3-3.1.2-py3.7.egg/ete3/evol/parser/codemlparser.py:221: SyntaxWarning: "is" with a literal. Did you mean
-"=="?
-```
-
-*Note: `alignbuddy` produces no output and the warnings produced by `ete3` can be ignored.*
-
-What these commands do is:
-
-1. `alignbuddy alignment.fasta -er "0:100" > alignment.100.fasta`: This extracts the first 100 bp from our multiple sequence alignment and saves to a file **alignment.100.fasta**.
-2. `export QT_QPA_PLATFORM="offscreen"`: This needs to be set before running `ete3`. This is needed since the machines on AWS don't have a graphical window system (X Server) attached so we need to tell `ete3` that this is expected (e.g., display is `"offscreen"`).
-3. `ete3 view ...`: This draw the phylogenetic tree (`-t tree.subs.nwk`) alongside the alignment (`--alg alignment.100.fasta`) and saves to a a PNG file (`-i tree.png`). *Note: You can save to a PDF file instead by using `-i tree.pdf`.*
-
-Once we have the PNG file saved, you should be able to go to <http://IP-ADDRESS/module4/tree.png> and view the tree alongside the first 100 bp of the alignment. This will be a pretty big drawing but should look something like:
-
-
-<img src="https://github.com/bioinformatics-ca/IDE_2021/blob/main/module4/images/tree-alignment.png?raw=true" alt="p2" width="750" />
-
-On the right you can see the first 100 bp of the alignment (note that many of the beginning bp are gaps `-` or ambiguous bases `N` due to issues with sequencing). On the left you can see the phylogenetic tree. The genome [MN908947](https://www.ncbi.nlm.nih.gov/nuccore/MN908947.3) is the reference genome which is used as a common coordinate system for naming mutations for SARS-CoV-2. We will discuss a bit more in class on how to interpret phylogenetic trees.
-
----
-
-## Step 5: Building a TimeTree (`augur refine`)
+## Step 4: Building a time tree or molecular-clock tree (`augur refine`)
 
 The tree output by [iqtree][] shows hypothetical evolutionary relationships between different SARS-CoV-2 genomes with branch lengths representing distances between different genomes (in units of **substitutions/site** or the predicted number of substitutions between genomes divided by the alignment length). However, other methods of measuring distance between genomes are possible. In particular we can incorporate the collection dates of the different SARS-CoV-2 genomes to infer a tree where branches are scaled according to the elapsed time. Such trees are called **time trees**.
 
@@ -312,7 +272,7 @@ As output, the file `tree.time.nwk` will contain the time tree while the file `r
 
 ---
 
-## Step 6: Package up data for Auspice (`augur export`)
+## Step 5: Package up data for Auspice (`augur export`)
 
 We will be using [Auspice][] to visualize the tree alongside our metadata. To do this, we need to package up all of the data we have so far into a special file which can be used by Auspice. To do this, please run the following command:
 
@@ -437,6 +397,50 @@ To view sample collection dates you can hover over the particular sample:
 # 6. End of lab
 
 You've made it to the end of the lab. Awesome job. If you find you have some extra time, you can explore the data in Auspice further and perhaps compare the tree we have generated to the figures from the study ([Figure 4](https://www.nature.com/articles/s41564-020-00838-z/figures/4) or [Figure 5](https://www.nature.com/articles/s41564-020-00838-z/figures/5)).
+
+<a name="bonus"></a>
+# 7. Bonus: Visualize tree alongside the alignment
+
+If you have the time, one additional exercise is to look at the phylogenetic tree we have constructed using [iqtree][] alongside the input multiple sequence alignment used to construct the tree. We will be using the [ETEToolkit][] to visualize the tree alongside the alignment. However, the full alignment is quite long, so we will use the [BuddySuite][] set of tools to select only a portion of the alignment to view. To do this please run the following:
+
+**Commands**
+```bash
+# Make sure you are in the 
+
+# Time: 20 seconds
+alignbuddy alignment.fasta -er "0:100" > alignment.100.fasta
+
+# Time: 10 seconds
+export QT_QPA_PLATFORM="offscreen"
+ete3 view -m r -t tree.subs.nwk -i tree.png --alg alignment.100.fasta --alg_type fullseq --alg_format fasta
+```
+
+As output you should expect to see:
+
+**Output**
+```
+/usr/local/conda/envs/augur/lib/python3.8/site-packages/ete3-3.1.2-py3.7.egg/ete3/evol/parser/codemlparser.py:221: SyntaxWarning: "is" with a literal. Did you mean
+"=="?
+/usr/local/conda/envs/augur/lib/python3.8/site-packages/ete3-3.1.2-py3.7.egg/ete3/evol/parser/codemlparser.py:221: SyntaxWarning: "is" with a literal. Did you mean
+"=="?
+```
+
+*Note: `alignbuddy` produces no output and the warnings produced by `ete3` can be ignored.*
+
+What these commands do is:
+
+1. `alignbuddy alignment.fasta -er "0:100" > alignment.100.fasta`: This extracts the first 100 bp from our multiple sequence alignment and saves to a file **alignment.100.fasta**.
+2. `export QT_QPA_PLATFORM="offscreen"`: This needs to be set before running `ete3`. This is needed since the machines on AWS don't have a graphical window system (X Server) attached so we need to tell `ete3` that this is expected (e.g., display is `"offscreen"`).
+3. `ete3 view ...`: This draw the phylogenetic tree (`-t tree.subs.nwk`) alongside the alignment (`--alg alignment.100.fasta`) and saves to a a PNG file (`-i tree.png`). *Note: You can save to a PDF file instead by using `-i tree.pdf`.*
+
+Once we have the PNG file saved, you should be able to go to <http://IP-ADDRESS/module4/tree.png> and view the tree alongside the first 100 bp of the alignment. This will be a pretty big drawing but should look something like:
+
+
+<img src="https://github.com/bioinformatics-ca/IDE_2021/blob/main/module4/images/tree-alignment.png?raw=true" alt="p2" width="750" />
+
+On the right you can see the first 100 bp of the alignment (note that many of the beginning bp are gaps `-` or ambiguous bases `N` due to issues with sequencing). On the left you can see the phylogenetic tree. The genome [MN908947](https://www.ncbi.nlm.nih.gov/nuccore/MN908947.3) is the reference genome which is used as a common coordinate system for naming mutations for SARS-CoV-2.
+
+---
 
 
 [Augur]: https://docs.nextstrain.org/projects/augur/en/stable/index.html
