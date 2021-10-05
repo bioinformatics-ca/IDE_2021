@@ -21,6 +21,8 @@ modified: October 2nd, 2021
 <a name="intro"></a>
 # 1. Introduction
 
+* [Introduction Slides][]
+
 This tutorial aims to introduce a variety of software and concepts related to detecting emerging pathogens from a complex host sample. The provided data and methods are derived from real-world data, but have been modified to either illustrate a specific learning objective or to reduce the complexity of the problem. Contamination and a lack of large and accurate databases render detection of microbial pathogens difficult. As a disclaimer, all results produced from the tools described in this tutorial and others must also be verified with supplementary bioinformatics or wet-laboratory techniques.
 
 <a name="software"></a>
@@ -79,6 +81,17 @@ Kraken version 2.1.2
 Copyright 2013-2021, Derrick Wood (dwood@cs.jhu.edu)
 ```
 
+## 3.3. Find your IP address
+
+If you do not have your IP address on-hand, please follow the below steps to find it again:
+
+**Commands**
+```bash
+curl http://checkip.amazonaws.com
+```
+
+This should print a number like XX.XX.XX.XX. Once you have your address, try going to <http://IP-ADDRESS> and clicking the link for **module6_workspace**. This page will be referred to later to view some of our output files. In addition, the link **precompuated-analysis** will contain all the files we will generate during this lab.
+
 <a name="exercise"></a>
 # 4. Exercise
 
@@ -133,7 +146,7 @@ fastp v0.22.0, time used: 34 seconds
 
 ### Examine output
 
-You should now be able to nagivate to <http://YOUR-MACHINE/module6_workspace/analysis> and see some of the output files. In particular, you should be able to find **fastp.html**, which contains a report of the quality of the reads and how many were removed. Please take a look at this report now:
+You should now be able to nagivate to <http://IP-ADDRESS/module6_workspace/analysis> and see some of the output files. In particular, you should be able to find **fastp.html**, which contains a report of the quality of the reads and how many were removed. Please take a look at this report now:
 
 
 <img src="https://github.com/bioinformatics-ca/IDE_2021/blob/main/module6/images/fastp.png?raw=true" alt="p2" width="750" />
@@ -378,7 +391,7 @@ NOTICEs: 1; WARNINGs: 0; non-fatal ERRORs: 0
 Thank you for using QUAST!
 ```
 
-Quast writes it's output to a directory `quast_results/`, which includes HTML and PDF reports. We can view this using a web browser by navigating to <http://[YOUR-MACHINE]/module6_workspace/analysis/quast_results/latest/icarus.html>. From here, click on **Contig size viewer**. You should see the following:
+Quast writes it's output to a directory `quast_results/`, which includes HTML and PDF reports. We can view this using a web browser by navigating to <http://IP_ADDRESS/module6_workspace/analysis/quast_results/latest/icarus.html>. From here, click on **Contig size viewer**. You should see the following:
 
 <img src="https://github.com/bioinformatics-ca/IDE_2021/blob/main/module6/images/quast-contigs.png?raw=true" alt="p2" width="750" />
 
@@ -409,7 +422,7 @@ Here, we first use [seqkit][] to sort all contigs by length (`seqkit sort --by-l
 
 The next command will run [BLAST][] on these top 50 longest contigs using a pre-computed database of viral genomes (`blastn -db ~/CourseData/IDE_data/module6/db/blast_db/ref_viruses_rep_genomes_modified -query contigs-50.fa ...`). The (`-html -out blast_results.html`) tells BLAST to write it's results as an HTML file.
 
-To view these results, please browse to <http://YOUR-MACHINE/module6_workspace/analysis/blast_results.html> to view the ouptut `blast_results.html` file. This should look something like below:
+To view these results, please browse to <http://IP-ADDRESS/module6_workspace/analysis/blast_results.html> to view the ouptut `blast_results.html` file. This should look something like below:
 
 
 <img src="https://github.com/bioinformatics-ca/IDE_2021/blob/main/module6/images/blast-report.png?raw=true" alt="p2" width="750" />
@@ -429,6 +442,7 @@ Congratulations, you've finished this lab. As a final check on your results, you
 
 The source of the data and patient background information can be found at <https://doi.org/10.1038/s41586-020-2008-3> (**clicking this link will reveal what the illness is**). The only modification made to the original metatranscriptomic reads was to reduce them to 10% of the orginal file size.
 
+Also, while we used **megahit** to perform the assembly, there are a number of other more recent assemblers that may be useful. In particular, the [SPAdes](https://cab.spbu.ru/software/spades/) suite of tools (such as [metaviralspades](https://doi.org/10.1093/bioinformatics/btaa490) or [rnaspades](https://doi.org/10.1093/gigascience/giz100)) may be useful to look into for this sort of data analysis.
 
 [fastp]: https://github.com/OpenGene/fastp
 [multiqc]: https://multiqc.info/
@@ -446,3 +460,4 @@ The source of the data and patient background information can be found at <https
 [quast-contigs.png]: images/quast-contigs.png
 [Quast]: http://quast.sourceforge.net/quast
 [blast-report.png]: images/blast-report.png
+[Introduction Slides]: https://drive.google.com/file/d/1PdQbTW2Ax3KV0JisAxYaWsEajSCMfIO8/view?usp=sharing
