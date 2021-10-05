@@ -95,8 +95,6 @@ Hints:
 2. Example `FastTree` usage: `FastTree -nt sequence.aln > tree.nwk`. You'll need to replace `sequence.aln` with the path to the correct alignment file
 3. Use the `ggtree` R package to generate a visualization of the phylogenetic tree
 
-*If you’re running out of time, you can refer to the precomputed tree [here](https://microreact.org/project/uMwV8YcgBGtHEFuMBWqBes/d8f6d8a4). The isolates are coloured by their associated outbreak.
-
 > ***Q4: What does the phylogenetic tree inform you about the relatedness of the isolates within the same outbreak and across different outbreaks?***
 
 > ***Q5: Do the isolates cluster by isolation source (e.g. Human, Food) or isolation date?***
