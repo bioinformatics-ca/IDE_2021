@@ -1,4 +1,15 @@
-# Module 5: AMR Practical
+---
+layout: tutorial_page
+permalink: /IDE_2021_Module5_lab
+title: IDE Module 5 Lab
+header1: AMR Practical
+header2: IDE Module 5 Lab
+image: /site_images/CBW_Metagenome_icon.jpg
+home: https://bioinformaticsdotca.github.io/IDE_2021
+description: AMR Practical
+modified: September 30, 2021
+---
+
 
 ## Table of contents
 0. [Learning Objectives](#obj)
