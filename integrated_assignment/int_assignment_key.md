@@ -31,7 +31,13 @@ The statistics `Aligned` and `Unaligned` can provide an indication of reference 
 ___
 ### Phylogenetic analysis & visualization
 
-Plotting phylogenetic tree in R:
+Building tree from alignment using FastTree on AWS:
+
+```
+FastTree -nt alignment/heidelberg_core.aln > tree.nwk
+```
+
+Plotting phylogenetic tree in RStudio:
 ```
 #load packages
 library(dplyr)
@@ -42,15 +48,27 @@ library(ggplot2)
 metadata<-read.csv("metadata.csv")
 tree<-read.tree("tree.nwk")
 
-#visualize tree
-fig<-ggtree(tree, layout="radial") %<+% metadata+
-  geom_tiplab(aes(color=as.factor(Outbreak_no)) ,size = 2)+ #add labels to tree & colour labels by outbreak
+#1. visualize tree, color isolates by isolation date
+fig_date<-ggtree(tree, layout="radial") %<+% metadata+
+  geom_tiplab(aes(color=as.factor(Isolation_date)) ,size = 2)+ #add labels to tree & colour labels by outbreak
   xlim(0,0.5) + #zoom into the tree
-  labs(color="Outbreak")
+  labs(color="Isolation date")
 
 #save tree to file
-ggsave("tree.png" , fig, width = 6, height = 5, device = "png")
+ggsave("tree_coloured_by_date.png" , fig_date, width = 6, height = 5, device = "png")
+
+#2. visualize tree, color isolates by isolation source
+fig_source<-ggtree(tree, layout="radial") %<+% metadata+
+  geom_tiplab(aes(color=as.factor(Source)) ,size = 2)+ #add labels to tree & colour labels by outbreak
+  xlim(0,0.5) + #zoom into the tree
+  labs(color="Source")
+
+#save tree to file
+ggsave("tree_coloured_by_source.png" , fig_source, width = 6, height = 5, device = "png")
 ```
+[tree_coloured_by_date.png][]
+[tree_coloured_by_source.png][]
+
 
 > ***Q4: What does the phylogenetic tree inform you about the relatedness of the isolates within the same outbreak and across different outbreaks?*** 
 
@@ -83,3 +101,5 @@ CRISPR arrays, insertional elements, genomic Islands, phage elements, integrativ
 [plasmids_heatmap.png]: images/plasmids_heatmap.png
 [amr_heatmap.png]: images/amr_heatmap.png
 [vfdb_heatmap.png]: images/vfdb_heatmap.png
+[tree_coloured_by_date.png]: images/tree_coloured_by_date.png
+[tree_coloured_by_source.png]: images/tree_coloured_by_source.png
