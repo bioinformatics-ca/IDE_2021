@@ -66,8 +66,9 @@ fig_source<-ggtree(tree, layout="radial") %<+% metadata+
 #save tree to file
 ggsave("tree_coloured_by_source.png" , fig_source, width = 6, height = 5, device = "png")
 ```
-[tree_coloured_by_date.png][]
-[tree_coloured_by_source.png][]
+![tree_coloured_by_date.png][]
+
+![tree_coloured_by_source.png][]
 
 
 > ***Q4: What does the phylogenetic tree inform you about the relatedness of the isolates within the same outbreak and across different outbreaks?*** 
