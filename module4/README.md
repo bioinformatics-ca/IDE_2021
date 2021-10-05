@@ -460,7 +460,7 @@ To view sample collection dates you can hover over the particular sample:
 ### Step 4: Questions
 
 1. How closely related are some of these genomes in `UK5098` (try toggling between **Time** and **Divergence** for Branch Length)? 
-2. Compare the earliest sample you can find in `UK5098` to the predicted date of the most recent common ancestor to all of `UK5098` (hover over the branch to get the date). How does this compare to the **Figure 5** above?
+2. Compare the earliest sample you can find in `UK5098` to the predicted date of the most recent common ancestor to all of `UK5098` (hover over the branch to get the date). How does this compare to the lag time in **Figure 5** above (the shaded gray area that's labeled `6d` for 6 days)?
 
 *Note: Our data may not look exactly the same as the figure. We used slightly different software and methods from that of the paper.*
 
