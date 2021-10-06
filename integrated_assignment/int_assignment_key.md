@@ -1,5 +1,5 @@
 ---
-layout: integrated_assignment
+layout: tutorial_page
 permalink: /IDE_2021_integrated_assignment
 title: Integrated Assignment Answer Key
 header1: Workshop Pages for Students
@@ -73,9 +73,10 @@ fig_source<-ggtree(tree, layout="radial") %<+% metadata+
 #save tree to file
 ggsave("tree_coloured_by_source.png" , fig_source, width = 6, height = 5, device = "png")
 ```
-![tree_coloured_by_date.png][]
 
-![tree_coloured_by_source.png][]
+<img src="https://github.com/bioinformatics-ca/IDE_2021/blob/main/integrated_assignment/images/tree_coloured_by_date.png?raw=true" alt="p2" width="750" />
+
+<img src="https://github.com/bioinformatics-ca/IDE_2021/blob/main/integrated_assignment/images/tree_coloured_by_source.png?raw=true" alt="p2" width="750" />
 
 
 > ***Q4: What does the phylogenetic tree inform you about the relatedness of the isolates within the same outbreak and across different outbreaks?*** 
@@ -111,15 +112,15 @@ Rscript IDE2021_integrated_hw/abricate_heatmap.R abricate/amr_summary.tab abrica
 
 Yes, the pattern of presence/absence of plasmids is distinct in each outbreak.
 
-![plasmids_heatmap.png][]
+<img src="https://github.com/bioinformatics-ca/IDE_2021/blob/main/integrated_assignment/images/plasmids_heatmap.png?raw=true" alt="p2" width="750" />
 
 > ***Q7: Do you see the same trend with AMR genes or virulence factors?*** 
 
 No, the majority of isolates, regardless of the outbreak of origin, exhibit the same trend in virulence factors and AMR genes.
 
-![amr_heatmap.png][]
+<img src="https://github.com/bioinformatics-ca/IDE_2021/blob/main/integrated_assignment/images/amr_heatmap.png?raw=true" alt="p2" width="750" />
 
-![vfdb_heatmap.png][]
+<img src="https://github.com/bioinformatics-ca/IDE_2021/blob/main/integrated_assignment/images/vfdb_heatmap.png?raw=true" alt="p2" width="750" />
 
 > ***Q8: Looking at the AMR heatmap, which samples likely contain AMR genes encoded on plasmids and how would you verify this looking at ABRicate results?***
 
