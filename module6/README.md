@@ -115,9 +115,54 @@ We will proceed through the following steps to attempt to diagnose the situation
 
 ---
 
-## Step 1: Clean and examine quality of the reads
+## Step 1: Examine the reads
 
-Reads that come directly off of a sequencer may be of variable quality which might impact the downstream analysis. We will use the software [fastp][] to both clean and trim reads (removing poor-quality reads or sequencing adapters) as well as examine the quality of the reads. To do this please run the following (the expected time of this command is shown as `# Time: 30 seconds`).
+Let's first take a moment to examine the reads from the metatranscrimptomic sequencing. Note that for metatranscriptomic seqencing, while we are sequencing the RNA, this was performed by first generating complementary DNA (cDNA) to the RNA and sequencing the DNA. Hence you will see thymine (T) instead of uracil (U) in the sequence data.
+
+The reads were generated from paired-end sequencing, which means that a particular fragment (of cDNA) was sequenced twice--once from either end (see [here](https://www.illumina.com/science/technology/next-generation-sequencing/plan-experiments/paired-end-vs-single-read.html) for some additional details). These pairs of cDNA sequence reads are stored as separate files (named `emerging-pathogen-reads_1.fastq.gz` and `emerging-pathogen-reads_2.fastq.gz`). You can see each file by running `ls`:
+
+**Commands**
+```bash
+ls ../data
+```
+
+**Output**
+```
+emerging-pathogen-reads_1.fastq.gz  emerging-pathogen-reads_2.fastq.gz
+```
+
+We can look at the contents of one of the files by running `less` (you can look at the other pair of reads too, but it will look very similar):
+
+**Commands**
+```bash
+less ../data/emerging-pathogen-reads_1.fastq.gz
+```
+
+**Output**
+```
+@SRR10971381.5 5 length=151
+NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN
++
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+@SRR10971381.7 7 length=151
+NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN
++
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+@SRR10971381.33 33 length=115
+NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN
++
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+@SRR10971381.56 56 length=151
+CCCGTGTTCGATTGGCATTTCACCCCTATCCACAACTCATCCCAAAGCTTTTCAACGCTCACGAGTTCGGTCCTCCACACAATTTTACCTGTGCTTCAACCTGGCCATGGATAGATCACTACGGTTTCGGGTCTACTATTACTAACTGAAC
++
+FFFFFFFAFFFFFFAFFFFFF6FFFFFFFFF/FFFFFFFFFFFF/FFFFFFFFFFFFFFFFFAFFFFFFFFFFFAFFFFF/FFAF/FAFFFFFFFFFAFFFF/FFFFFFFFFFF/F=FF/FFFFA6FAFFFFF//FFAFFFFFFAFFFFFF
+```
+
+These reads are in the [FASTQ](https://en.wikipedia.org/wiki/FASTQ_format), which stores a single read as a block of 4 lines: **identifier**, **sequence**, **+ (separator)**, **quality scores**. In this file, we can see a lot of lines with `NNN...` for the sequence letters, which means that these portions of the read are not determined. We will remove some of these undetermined (and uninformative) reads in the next step.
+
+## Step 2: Clean and examine quality of the reads
+
+As we saw from looking at the data, reads that come directly off of a sequencer may be of variable quality which might impact the downstream analysis. We will use the software [fastp][] to both clean and trim reads (removing poor-quality reads or sequencing adapters) as well as examine the quality of the reads. To do this please run the following (the expected time of this command is shown as `# Time: 30 seconds`).
 
 **Commands**
 ```bash
@@ -153,7 +198,7 @@ You should now be able to nagivate to <http://IP-ADDRESS/module6_workspace/analy
 
 This should show an overview of the quality of the reads before and after filtering with `fastp`. Using this report, please anser the following questions.
 
-### Step 1: Questions
+### Step 2: Questions
 
 1. Looking at the **Filtering result** section, how many reads **passed filters**? How many were removed due to **low quality**? How many were removed due to **too many**?
 2. Looking at the **Adapters** section, were there many adapters that needed to be trimmed in this data?
@@ -161,7 +206,7 @@ This should show an overview of the quality of the reads before and after filter
 
 ---
 
-## Step 2: Host read filtering
+## Step 3: Host read filtering
 
 The next step is to remove any host reads (in this case Human reads) from our dataset as we are not focused on examining host reads. There are several different tools that can be used to filter out host reads such as Kraken2, BLAST, KAT and others. In this demonstration, we have selected to run KAT followed by Kraken2, but you could likely accomplish something similar directly in Kraken2.
 
@@ -218,7 +263,7 @@ These are the set of reads minus any reads that matched the human genome. The me
 
 ---
 
-## Step 3: Classify reads using Kraken2 database
+## Step 4: Classify reads using Kraken2 database
 
 Now that we have most, if not all, host reads filtered out, it’s time to classify the remaining reads to identify the likely taxonomic category they belong to.
 
@@ -304,7 +349,7 @@ We will use this information in the next step to build our visualization.
 
 ---
 
-## Step 4: Generate an interactive html-based report using Krona
+## Step 5: Generate an interactive html-based report using Krona
 
 Instead of reading a text-based files like above, we can visualize this information using [Krona][], which will construct a multi-layered pie chart from our data. To generate a Krona figure, we first must make a file, `krona_input.txt`, containing a list of read IDs and the taxonomic IDs these reads were assigned to. Luckily, this information is all available in the `kraken_out.txt` file above, we just have to cut the unneeded columns out of this file (using the command `cut`). Once we do this we can then run `ktImportTaxonomy` to create the figure.
 
@@ -324,7 +369,7 @@ ktImportTaxonomy krona_input.txt -o krona_report.html
 
 Let’s look at what Krona generated. Return to your web browser and go to <http://IP-ADDRESS/module6_workspace/analysis/> to see the new files added in the `module6_workspace/analysis` directory. Click on **final_web_report.html**. *Note: if this is not working, what you should see is shown in the image [krona-all.png][]*.
 
-### Step 4: Questions
+### Step 5: Questions
 
 1. What does the distribution of taxa found in the reads look like? Is there any pathogen here that could be consistent with a cause for the patients symptoms?
 2. This data was derived from RNA (instead of DNA) and some viruses are RNA-based. Take a look into the **Viruses** category in Krona (by expanding this category). Is there anything here that could be consistent with the patient's symptoms? *Note: if you cannot expand the **Viruses** category what you should see is shown in this image [krona-viruses.png][].*.
@@ -332,7 +377,7 @@ Let’s look at what Krona generated. Return to your web browser and go to <http
 
 ---
 
-## Step 5: Metatranscriptomic assembly
+## Step 6: Metatranscriptomic assembly
 
 In order to investigate the data further we will assemble the metatranscriptome using the software [MEGAHIT][]. What this will do is integrate all the read data together to attempt to produce the longest set of contiguous sequences possible (contigs). To do this please run the following:
 
@@ -394,7 +439,7 @@ It can be a bit difficult to get an overall idea of what is in this file, so in 
 
 ---
 
-## Step 6: Evaluate assembly with Quast
+## Step 7: Evaluate assembly with Quast
 
 [Quast][] can be used to provide summary statistics on the output of assembly software. Quast will take as input an assembled genome or metagenome (a FASTA file of different sequences) and will produce HTML and PDF reports. We will run Quast on our data by running the following command:
 
@@ -434,7 +479,7 @@ Quast writes it's output to a directory `quast_results/`, which includes HTML an
 
 This shows the length of each contig in the `megahit_out/final.contigs.fa` file, sorted by size.
 
-### Step 6: Questions
+### Step 7: Questions
 
 1. What is the length of the largest contig in the genome? How does it compare to the length of the 2nd and 3rd largest contigs?
 2. Given that this is RNASeq data (i.e., sequences derived from RNA), what is the most common type of RNA you should expect to find? What is the approximate lengths of these RNA fragments? Is the largest contig an outlier (i.e., is it much longer than you would expect)?
@@ -443,7 +488,7 @@ This shows the length of each contig in the `megahit_out/final.contigs.fa` file,
 
 ---
 
-## Step 7: Use BLAST to look for existing organisms
+## Step 8: Use BLAST to look for existing organisms
 
 In order to get a better handle on what the identity of the largest contigs could be, let's use [BLAST][] to compare to a database of existing viruses. Please run the following:
 
@@ -476,7 +521,7 @@ To view these results, please browse to <http://IP-ADDRESS/module6_workspace/ana
 <img src="https://github.com/bioinformatics-ca/IDE_2021/blob/main/module6/images/blast-report.png?raw=true" alt="p2" width="750" />
 
 
-### Step 7: Questions
+### Step 8: Questions
 
 1. What is the closest match for the longest contig you find in your data? What is the percent identify for this match (the value Z in `Identities = X/Y (Z%)`). Recall that if a pathogen is an emerging/novel pathogen then you may not get a perfect match to any existing organisms.
 2. Using the BLAST report alongside all other information we've gathered, what can you say about what pathogen may be causing the patient's symptoms?
@@ -499,6 +544,8 @@ Congratulations, you've finished this lab. As a final check on your results, you
 The source of the data and patient background information can be found at <https://doi.org/10.1038/s41586-020-2008-3> (**clicking this link will reveal what the illness is**). The only modification made to the original metatranscriptomic reads was to reduce them to 10% of the orginal file size.
 
 Also, while we used **megahit** to perform the assembly, there are a number of other more recent assemblers that may be useful. In particular, the [SPAdes](https://cab.spbu.ru/software/spades/) suite of tools (such as [metaviralspades](https://doi.org/10.1093/bioinformatics/btaa490) or [rnaspades](https://doi.org/10.1093/gigascience/giz100)) may be useful to look into for this sort of data analysis.
+
+As a final note, NCBI also performs taxonomic analysis using their own software and you can actually view these using Krona directly from NCBI. Please click [here](https://trace.ncbi.nlm.nih.gov/Traces/sra/?run=SRR10971381) and go to the *Analysis* tab for NCBI's taxonomic analysis of this sequence data (**clicking this link will reveal what the illness is**).
 
 [fastp]: https://github.com/OpenGene/fastp
 [multiqc]: https://multiqc.info/
