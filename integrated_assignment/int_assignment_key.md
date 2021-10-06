@@ -14,6 +14,13 @@ author: Venus Lau & Jimmy Liu
 # IDE 2021 Integrated Assignment Answer Key
 ## Developed by: Venus Lau & Jimmy Liu
 
+To start, copy the integrated assignment data directory to your workspace and change your working directory:
+
+```
+cp -r ~/CourseData/IDE_data/integrated_hw/ ~/workspace
+cd ~/workspace/integrated_hw
+```
+
 ### Core genome SNV analysis
 
 > ***Q1: What is the length of the alignment and how is this length determined?*** 
@@ -80,6 +87,25 @@ Isolates of the same outbreak are more phylogenetically related (higher sequence
 Isolates tend to cluster by isolation date.
 ___
 ### Genome Annotation
+
+To search for AMR genes in CARD using ABRicate as example:
+
+```Bash
+# create output directory
+mkdir -p abricate/amr
+# call abricate
+for genome in assemblies/*; do
+    abricate --db card assemblies $genome > abricate/amr/$(basename $genome .fa).tab
+done
+# create a summary file for all genomes
+abricate --summary abricate/amr/*.tab > abricate/amr_summary.tab
+```
+
+To visualize the AMR genes summary:
+
+```Bash
+Rscript IDE2021_integrated_hw/abricate_heatmap.R abricate/amr_summary.tab abricate/amr_heatmap.png
+```
 
 > ***Q6: Can you infer which isolates are epidemiologically linked and which isolates are sporadic cases based on the presence/absence of the plasmids?*** 
 
