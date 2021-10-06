@@ -334,7 +334,7 @@ Let’s look at what Krona generated. Return to your web browser and go to <http
 
 ## Step 5: Metatranscriptomic assembly
 
-In order to investigate the data further we will assemble the metatranscriptome using the software [MEGAHIT][]. To do this please run the following:
+In order to investigate the data further we will assemble the metatranscriptome using the software [MEGAHIT][]. What this will do is integrate all the read data together to attempt to produce the longest set of contiguous sequences possible (contigs). To do this please run the following:
 
 **Commands**
 ```bash
@@ -374,7 +374,7 @@ ls megahit_out/
 checkpoints.txt  done  final.contigs.fa  intermediate_contigs  log  options.json
 ```
 
-It's specifically the **final.contigs.fa** file that contains our metatranscriptome assembly. This will contain the largest *contiguous* sequences MEGAHIT was able to construct from the sequence reads. We can look at the contents with the command `head`:
+It's specifically the **final.contigs.fa** file that contains our metatranscriptome assembly. This will contain the largest *contiguous* sequences MEGAHIT was able to construct from the sequence reads. We can look at the contents with the command `head` (`head` prints the first 10 lines of a file):
 
 **Commands**
 ```bash
@@ -396,7 +396,7 @@ It can be a bit difficult to get an overall idea of what is in this file, so in 
 
 ## Step 6: Evaluate assembly with Quast
 
-[Quast][] can be used to provide summary statistics on the output of assembly software. We will run Quast on our data by running the following command:
+[Quast][] can be used to provide summary statistics on the output of assembly software. Quast will take as input an assembled genome or metagenome (a FASTA file of different sequences) and will produce HTML and PDF reports. We will run Quast on our data by running the following command:
 
 **Commands**
 ```bash
@@ -428,7 +428,7 @@ NOTICEs: 1; WARNINGs: 0; non-fatal ERRORs: 0
 Thank you for using QUAST!
 ```
 
-Quast writes it's output to a directory `quast_results/`, which includes HTML and PDF reports. We can view this using a web browser by navigating to <http://IP_ADDRESS/module6_workspace/analysis/quast_results/latest/icarus.html>. From here, click on **Contig size viewer**. You should see the following:
+Quast writes it's output to a directory `quast_results/`, which includes HTML and PDF reports. We can view this using a web browser by navigating to <http://IP_ADDRESS/module6_workspace/analysis/> and clicking on **quast_results** then **latest** then **icarus.html**. From here, click on **Contig size viewer**. You should see the following:
 
 <img src="https://github.com/bioinformatics-ca/IDE_2021/blob/main/module6/images/quast-contigs.png?raw=true" alt="p2" width="750" />
 
@@ -439,18 +439,29 @@ This shows the length of each contig in the `megahit_out/final.contigs.fa` file,
 1. What is the length of the largest contig in the genome? How does it compare to the length of the 2nd and 3rd largest contigs?
 2. Given that this is RNASeq data (i.e., sequences derived from RNA), what is the most common type of RNA you should expect to find? What is the approximate lengths of these RNA fragments? Is the largest contig an outlier (i.e., is it much longer than you would expect)?
 3. Is there another type of source for this RNA fragment that could explain it's length? Possibly a [Virus](https://en.wikipedia.org/wiki/Coronavirus#Genome)?
+4. Also try looking at the QUAST report (<http://IP_ADDRESS/module6_workspace/analysis/quast_results/latest/> then clicking on **report.html**). How many contigs >= 1000 bp are there compared to the number < 1000 bp?
 
 ---
 
 ## Step 7: Use BLAST to look for existing organisms
 
-In order to get a better handle on what the identity of this large contig could be, let's use [BLAST][] to compare to a database of existing viruses. Please run the following:
+In order to get a better handle on what the identity of the largest contigs could be, let's use [BLAST][] to compare to a database of existing viruses. Please run the following:
 
 **Commands**
 ```
 # Time: seconds
 seqkit sort --by-length --reverse megahit_out/final.contigs.fa | seqkit head -n 50 > contigs-50.fa
 blastn -db ~/CourseData/IDE_data/module6/db/blast_db/ref_viruses_rep_genomes_modified -query contigs-50.fa -html -out blast_results.html
+```
+
+As output you should see something like (`blastn` won't print any output):
+
+**Output**
+```
+[INFO] read sequences ...
+[INFO] 3112 sequences loaded
+[INFO] sorting ...
+[INFO] output ...
 ```
 
 Here, we first use [seqkit][] to sort all contigs by length (`seqkit sort --by-length ...`) and we then extract only the top **50** longest contigs (`seqkit head -n 50`) and write these to a file **contigs-50.fa** (`> contigs-50.fa`).
@@ -467,15 +478,23 @@ To view these results, please browse to <http://IP-ADDRESS/module6_workspace/ana
 
 ### Step 7: Questions
 
-1. What is the closest match for the longest contig you find in your data? Recall that if a pathogen is an emerging/novel pathogen then you may not get a perfect match to any existing organisms.
+1. What is the closest match for the longest contig you find in your data? What is the percent identify for this match (the value Z in `Identities = X/Y (Z%)`). Recall that if a pathogen is an emerging/novel pathogen then you may not get a perfect match to any existing organisms.
 2. Using the BLAST report alongside all other information we've gathered, what can you say about what pathogen may be causing the patient's symptoms?
+3. It can be difficult to examine all the contigs/BLAST matches at once with the standard BLAST report (which shows the full alignment). We can modify the BLAST command to output a tab-separated file, with one BLAST HSP (a high-scoring segment pair) per line. To do this please run the following:
+
+   **Commands**
+   ```bash
+   blastn -db ~/CourseData/IDE_data/module6/db/blast_db/ref_viruses_rep_genomes_modified -query contigs-50.fa -outfmt '7 qseqid length slen pident sseqid stitle' -out blast_report.tsv
+   ```
+
+   This should construct a tabular BLAST report with the columns labeled like `query id, alignment length, subject length, % identity, subject id, subject title`. Taking a look at the file `blast_report.tsv`, what are all the different BLAST matches you can find (the different values for `subject title`)? How do they compare in terms of `% identity` and `alignment length` (in general, higher values for both of these should be better matches)?
 
 ---
 
 <a name="final"></a>
 # 5. Final words
 
-Congratulations, you've finished this lab. As a final check on your results, you can use [NCBI's online tool](https://blast.ncbi.nlm.nih.gov/Blast.cgi) to perform a BLAST on a larger database to see if you get any better matches.
+Congratulations, you've finished this lab. As a final check on your results, you can use [NCBI's online tool](https://blast.ncbi.nlm.nih.gov/Blast.cgi) to perform a BLAST on our top 50 contigs to see what matches to the 
 
 The source of the data and patient background information can be found at <https://doi.org/10.1038/s41586-020-2008-3> (**clicking this link will reveal what the illness is**). The only modification made to the original metatranscriptomic reads was to reduce them to 10% of the orginal file size.
 
