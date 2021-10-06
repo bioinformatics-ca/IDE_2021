@@ -66,8 +66,9 @@ Core genome alignment of the entire dataset is located at:
 ```
 
 Description of SNV alignment summary headers:
+
 | Header | Description |
-|----|----|
+| --- | --- |
 | ID | Sample identifier |
 | LENGTH | Reference sequence length (bps) |
 | ALIGNED | Reference sequence length aligned by query (bps) |
@@ -133,5 +134,7 @@ Rscript abricate_heatmap.R /path/to/amr_summary.tab /path/to/amr_heatmap.png
 
 > ***Q7: Do you see the same trend with AMR genes or virulence factors?***
 
-> ***Q8: Aside from plasmids, AMR genes and VF, can you think of other genetic features in bacterial genomes that may help discriminate between these outbreaks?***
+> ***Q8: Looking at the AMR heatmap, which samples likely contain AMR genes encoded on plasmids and how would you verify this looking at ABRicate results?***
+
+> ***Q9: Aside from plasmids, AMR genes and VF, can you think of other genetic features in bacterial genomes that may help discriminate between these outbreaks?***
 

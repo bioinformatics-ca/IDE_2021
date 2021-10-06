@@ -95,7 +95,17 @@ No, the majority of isolates, regardless of the outbreak of origin, exhibit the 
 
 ![vfdb_heatmap.png][]
 
-> ***Q8: Aside from plasmids, AMR genes and VF, can you think of other genetic features in bacterial genomes that may help discriminate between these outbreaks?*** 
+> ***Q8: Looking at the AMR heatmap, which samples likely contain AMR genes encoded on plasmids and how would you verify this looking at ABRicate results?***
+
+SH14-009 and SH08-001, because the heatmaps show that they carry 1-2 unique AMR genes that are not present in any other genomes in the dataset. Furthermore, in the plasmids heatmap, we also observe that SH14-009 and SH08-001 carry unique plasmids; hence the unqiue AMR genes are most likely encoded by these unique plasmids.
+
+To verify this, we first identify the contig name associated with the unique plasmids from the invidiual abricate results. For example, based on the plasmids heatmap, we observe that SH14-009 carries the unique plasmid, IncI1_1_Alpha.
+
+Running: `grep IncI_1_Alpha abricate/plasmids/SH14-009.tab`, we find that the unique plasmid is associated with the contig name, CP016585.1
+
+Subsequently, we can search in the AMR results of SH14-009 to identify AMR genes that are present in the contig CP016585.1 by running `grep CP016585.1 abricate/amr/SH14-009.tab`. And indeed, we find that the contig contains two AMR genes: AAC(3)-VIa and ANT(3'')-IIa, which in fact are the two AMR genes unique to SH14-009!
+
+> ***Q9: Aside from plasmids, AMR genes and VF, can you think of other genetic features in bacterial genomes that may help discriminate between these outbreaks?*** 
 
 CRISPR arrays, insertional elements, genomic Islands, phage elements, integrative conjugative elements
 
