@@ -57,7 +57,7 @@ tree<-read.tree("tree.nwk")
 
 #1. visualize tree, color isolates by isolation date
 fig_date<-ggtree(tree, layout="radial") %<+% metadata+
-  geom_tiplab(aes(color=as.factor(Isolation_date)) ,size = 2)+ #add labels to tree & colour labels by outbreak
+  geom_tiplab(aes(color=as.factor(Isolation_date)) ,size = 2)+ #add labels to tree & colour labels by isolation date
   xlim(0,0.5) + #zoom into the tree
   labs(color="Isolation date")
 
@@ -66,7 +66,7 @@ ggsave("tree_coloured_by_date.png" , fig_date, width = 6, height = 5, device = "
 
 #2. visualize tree, color isolates by isolation source
 fig_source<-ggtree(tree, layout="radial") %<+% metadata+
-  geom_tiplab(aes(color=as.factor(Source)) ,size = 2)+ #add labels to tree & colour labels by outbreak
+  geom_tiplab(aes(color=as.factor(Source)) ,size = 2)+ #add labels to tree & colour labels by isolation source
   xlim(0,0.5) + #zoom into the tree
   labs(color="Source")
 
